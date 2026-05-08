@@ -1,0 +1,117 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #0f766e;
+  --primary-strong: #115e59;
+  --border: #e5e7eb;
+  --shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 0% 0%, #dbeafe 0, transparent 30%),
+    radial-gradient(circle at 100% 20%, #ccfbf1 0, transparent 35%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+.container {
+  width: min(920px, 92vw);
+  margin: 48px auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.hero {
+  padding: 36px 28px 20px;
+  background: linear-gradient(135deg, #0f766e 0%, #0891b2 100%);
+  color: #fff;
+}
+
+.hero h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2.2rem); }
+.hero p { margin: 10px 0 0; color: #ecfeff; opacity: 1; }
+
+.content { padding: 22px; }
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.list a {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  font-weight: 600;
+}
+
+.list a:hover {
+  transform: translateY(-2px);
+  border-color: #99f6e4;
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.12);
+  color: var(--primary-strong);
+}
+
+.footer { padding: 0 22px 22px; color: var(--muted); font-size: .92rem; }
+
+.wrap {
+  width: min(860px, 92vw);
+  margin: 42px auto;
+}
+
+.topbar { margin-bottom: 14px; }
+
+.back {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.back:hover { text-decoration: underline; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+h1 {
+  margin: 0 0 18px;
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+}
+
+main { line-height: 1.7; }
+
+main h1, main h2, main h3 {
+  margin-top: 1.25em;
+  margin-bottom: .5em;
+  line-height: 1.3;
+}
+
+main p { margin: .85em 0; color: #2d3748; }
+
+main strong { color: #0f172a; }
+
+@media (max-width: 640px) {
+  .card { padding: 20px; }
+}
