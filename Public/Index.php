@@ -27,7 +27,11 @@ function isAssetRequest(string $path): bool
     }
 
     $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-    return $extension !== '' && $extension !== 'php';
+    if ($extension === '' || $extension === 'php') {
+        return false;
+    }
+
+    return true;
 }
 
 function mapAssetAlias(string $path): string
@@ -46,7 +50,11 @@ function isAllowedAsset(string $absolutePath): bool
     }
 
     $extension = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
-    return $extension !== 'php';
+    if ($extension === 'php') {
+        return false;
+    }
+
+    return true;
 }
 
 function resolvePathCaseInsensitive(
@@ -87,11 +95,11 @@ function findMatchingEntry(
 
     $target = strtolower($segment);
     foreach ($entries as $entry) {
-        if (
-            $entry === '.'
-            || $entry === '..'
-            || strtolower($entry) !== $target
-        ) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+
+        if (strtolower($entry) !== $target) {
             continue;
         }
 
@@ -110,8 +118,29 @@ function findMatchingEntry(
 
 function sendAsset(string $absolutePath): void
 {
-    $mimeType = mime_content_type($absolutePath);
-    if ($mimeType !== false) {
+    $extension = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
+    $mimeByExtension = [
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'json' => 'application/json',
+        'svg' => 'image/svg+xml',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'ico' => 'image/x-icon',
+        'txt' => 'text/plain',
+        'xml' => 'application/xml',
+    ];
+    $mimeType = $mimeByExtension[$extension] ?? '';
+    if ($mimeType === '') {
+        $detectedMimeType = mime_content_type($absolutePath);
+        if ($detectedMimeType !== false) {
+            $mimeType = $detectedMimeType;
+        }
+    }
+    if ($mimeType !== '') {
         header('Content-Type: ' . $mimeType);
     }
 

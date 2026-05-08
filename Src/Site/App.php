@@ -7,8 +7,6 @@ namespace App\Site;
 final class App
 {
     private Responder $responder;
-
-    /** @var RouteHandler[] */
     private array $routeHandlers;
 
     public function __construct(

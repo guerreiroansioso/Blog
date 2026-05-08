@@ -6,11 +6,15 @@ namespace App\Site;
 
 final class PageRoute implements RouteHandler
 {
+    private const SUPPORTED_PATHS = [
+        '/page',
+        '/page/',
+        '/page/Index.php',
+    ];
+
     public function supports(string $path): bool
     {
-        return $path === '/page'
-            || $path === '/page/'
-            || $path === '/page/Index.php';
+        return in_array($path, self::SUPPORTED_PATHS, true);
     }
 
     public function handle(string $slug, Responder $responder): void

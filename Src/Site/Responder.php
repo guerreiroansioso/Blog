@@ -54,6 +54,11 @@ final class Responder
     {
         $slug = strtolower(trim($value));
         $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
-        return trim($slug, '-') ?: 'untitled';
+        $slug = trim($slug, '-');
+        if ($slug === '') {
+            return 'untitled';
+        }
+
+        return $slug;
     }
 }
