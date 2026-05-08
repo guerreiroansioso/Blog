@@ -13,7 +13,6 @@
     </div>
 
     <article class="card">
-      <h1><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></h1>
       <main><?= $contentHtml ?></main>
     </article>
   </div>
