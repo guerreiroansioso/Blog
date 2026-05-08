@@ -21,7 +21,7 @@
     </section>
     <?php if ($showBackLink): ?>
       <div class="topbar">
-        <a class="back" href="/">← Voltar para lista</a>
+        <a class="back" href="/">← Voltar para o início</a>
       </div>
     <?php endif; ?>
 
