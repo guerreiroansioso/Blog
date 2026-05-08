@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class Parser
-{
+final class Parser {
     private const HEADING_MAP = [
         '### ' => 'h3',
         '## ' => 'h2',
         '# ' => 'h1',
     ];
 
-    public function parse(string $content): string
-    {
+    public function parse(string $content): string {
         $lines = preg_split('/\R/', $content) ?: [];
         $html = [];
 
         foreach ($lines as $line) {
             $trimmed = trim($line);
-            if ($trimmed === '') {
-                continue;
-            }
+            if ($trimmed === '') { continue; }
 
             $this->appendParsedLine($html, $trimmed);
         }
@@ -29,8 +25,7 @@ final class Parser
         return implode("\n", $html);
     }
 
-    private function inline(string $text): string
-    {
+    private function inline(string $text): string {
         $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
         $escaped = preg_replace(
             '/\*\*(.+?)\*\*/',
@@ -43,12 +38,9 @@ final class Parser
         return $escaped;
     }
 
-    private function buildHeading(string $line): string
-    {
+    private function buildHeading(string $line): string {
         foreach (self::HEADING_MAP as $prefix => $tag) {
-            if (!str_starts_with($line, $prefix)) {
-                continue;
-            }
+            if (!str_starts_with($line, $prefix)) { continue; }
 
             return $this->buildHeadingHtml($line, $prefix, $tag);
         }
@@ -56,8 +48,7 @@ final class Parser
         return '';
     }
 
-    private function appendParsedLine(array &$html, string $line): void
-    {
+    private function appendParsedLine(array &$html, string $line): void {
         $headingHtml = $this->buildHeading($line);
         $html[] = match ($headingHtml !== '') {
             true => $headingHtml,

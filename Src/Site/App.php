@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class App
-{
+final class App {
     private Responder $responder;
     private array $routeHandlers;
 
@@ -19,6 +18,7 @@ final class App
             $this->parser,
             $this->viewRenderer
         );
+
         $this->routeHandlers = [
             new HomeRoute(),
             new PageRoute(),
@@ -26,14 +26,11 @@ final class App
         ];
     }
 
-    public function handle(string $requestUri, string $slug = ''): void
-    {
+    public function handle(string $requestUri, string $slug = ''): void {
         $path = parse_url($requestUri, PHP_URL_PATH) ?? '';
 
         foreach ($this->routeHandlers as $routeHandler) {
-            if (!$routeHandler->supports($path)) {
-                continue;
-            }
+            if (!$routeHandler->supports($path)) { continue; }
 
             $routeHandler->handle($slug, $this->responder);
             return;

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class PageFactory
-{
-    public function fromFile(string $filePath): Page
-    {
+final class PageFactory {
+    public function fromFile(string $filePath): Page {
         $body = file_get_contents($filePath);
         if ($body === false) {
             throw new \RuntimeException('Falha ao ler arquivo: ' . $filePath);
@@ -23,8 +21,7 @@ final class PageFactory
         return new Page($slug, $title, $body);
     }
 
-    public function notFound(string $slug): Page
-    {
+    public function notFound(string $slug): Page {
         return new Page(
             $slug,
             'Página não encontrada',
@@ -32,8 +29,7 @@ final class PageFactory
         );
     }
 
-    private function extractTitle(string $content): string
-    {
+    private function extractTitle(string $content): string {
         $matches = [];
         if (preg_match('/^\s*#\s+(.+)$/m', $content, $matches) !== 1) {
             return '';
@@ -42,14 +38,11 @@ final class PageFactory
         return trim($matches[1]);
     }
 
-    private function normalizeSlug(string $value): string
-    {
+    private function normalizeSlug(string $value): string {
         $slug = strtolower(trim($value));
         $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
         $slug = trim($slug, '-');
-        if ($slug === '') {
-            return 'untitled';
-        }
+        if ($slug === '') { return 'untitled'; }
 
         return $slug;
     }

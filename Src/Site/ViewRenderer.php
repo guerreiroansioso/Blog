@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class ViewRenderer
-{
+final class ViewRenderer {
     public function __construct(private string $viewsDirectory) {}
 
-    public function render(string $templateName, array $data = []): string
-    {
+    public function render(string $templateName, array $data = []): string {
         $templatePath = rtrim($this->viewsDirectory, '/') .
             '/' . $templateName . '.php';
 

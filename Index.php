@@ -9,8 +9,7 @@ use App\Site\ViewRenderer;
 
 require_once __DIR__ . '/Src/Bootstrap/Autoloader.php';
 
-function buildApplication(): App
-{
+function buildApplication(): App {
     return new App(
         new Repository(__DIR__ . '/Content'),
         new Parser(),
@@ -18,7 +17,6 @@ function buildApplication(): App
     );
 }
 
-function runApplication(string $requestUri, string $slug = ''): void
-{
+function runApplication(string $requestUri, string $slug = ''): void {
     buildApplication()->handle($requestUri, $slug);
 }
