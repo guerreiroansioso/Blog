@@ -16,7 +16,11 @@
     <section class="content">
       <ul class="list">
         <?php foreach ($items as $item): ?>
-          <li><a href="/page?slug=<?= urlencode($item->Slug()) ?>"><?= htmlspecialchars($item->Title(), ENT_QUOTES, 'UTF-8') ?></a></li>
+          <li>
+            <a href="/page?slug=<?= urlencode($item->slug()) ?>">
+              <?= htmlspecialchars($item->title(), ENT_QUOTES, 'UTF-8') ?>
+            </a>
+          </li>
         <?php endforeach; ?>
       </ul>
     </section>

@@ -13,32 +13,34 @@ final class App
     ) {
     }
 
-    public function Handle(string $requestUri, string $slug = ''): void
+    public function handle(string $requestUri, string $slug = ''): void
     {
         $path = (string) parse_url($requestUri, PHP_URL_PATH);
 
         match ($path) {
-            '/', '' => $this->RenderHome($slug),
-            '/page', '/page/', '/page/Index.php' => $this->RenderPageRoute($slug),
-            default => $this->RenderNotFound(),
+            '/', '' => $this->renderHome($slug),
+            '/page',
+            '/page/',
+            '/page/Index.php' => $this->renderPageRoute($slug),
+            default => $this->renderNotFound(),
         };
     }
 
-    private function RenderHome(string $slug): void
+    private function renderHome(string $slug): void
     {
         if ($slug !== '') {
-            $this->RenderPage($slug);
+            $this->renderPage($this->normalizeSlug($slug));
             return;
         }
 
-        $pages = $this->repository->ListPages();
-        echo $this->viewRenderer->Render('Home', [
+        $pages = $this->repository->listPages();
+        echo $this->viewRenderer->render('Home', [
             'pageTitle' => 'Lista de Páginas',
             'items' => $pages,
         ]);
     }
 
-    private function RenderPageRoute(string $slug): void
+    private function renderPageRoute(string $slug): void
     {
         if ($slug === '') {
             http_response_code(400);
@@ -46,30 +48,35 @@ final class App
             return;
         }
 
-        $this->RenderPage($slug);
+        $this->renderPage($this->normalizeSlug($slug));
     }
 
-    private function RenderNotFound(): void
+    private function renderNotFound(): void
     {
         http_response_code(404);
         echo '404 - Página não encontrada';
     }
 
-    private function RenderPage(string $slug): void
+    private function renderPage(string $slug): void
     {
-        $page = $this->repository->FindBySlug($slug);
+        $page = $this->repository->findBySlug($slug);
 
-        if ($page === null) {
+        if ($page->title() === 'Página não encontrada') {
             http_response_code(404);
-            echo 'Página não encontrada.';
-            return;
         }
 
-        $contentHtml = $this->parser->Parse($page->Body());
+        $contentHtml = $this->parser->parse($page->body());
 
-        echo $this->viewRenderer->Render('Page', [
-            'pageTitle' => $page->Title(),
+        echo $this->viewRenderer->render('Page', [
+            'pageTitle' => $page->title(),
             'contentHtml' => $contentHtml,
         ]);
+    }
+
+    private function normalizeSlug(string $value): string
+    {
+        $slug = strtolower(trim($value));
+        $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
+        return trim($slug, '-') ?: 'untitled';
     }
 }

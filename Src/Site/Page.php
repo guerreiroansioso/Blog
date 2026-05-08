@@ -13,17 +13,17 @@ final class Page
     ) {
     }
 
-    public function Slug(): string
+    public function slug(): string
     {
         return $this->slug;
     }
 
-    public function Title(): string
+    public function title(): string
     {
         return $this->title;
     }
 
-    public function Body(): string
+    public function body(): string
     {
         return $this->body;
     }

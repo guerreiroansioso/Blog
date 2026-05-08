@@ -10,8 +10,7 @@ final class Repository
     {
     }
 
-    /** @return Page[] */
-    public function ListPages(): array
+    public function listPages(): array
     {
         $files = glob(rtrim($this->contentDirectory, '/') . '/*.md');
 
@@ -24,26 +23,24 @@ final class Repository
         $pages = [];
 
         foreach ($files as $filePath) {
-            $pages[] = $this->BuildPage($filePath);
+            $pages[] = $this->buildPage($filePath);
         }
 
         return $pages;
     }
 
-    public function FindBySlug(string $slug): ?Page
+    public function findBySlug(string $slug): Page
     {
-        $normalizedSlug = $this->NormalizeSlug($slug);
-
-        foreach ($this->ListPages() as $page) {
-            if ($page->Slug() === $normalizedSlug) {
+        foreach ($this->listPages() as $page) {
+            if ($page->slug() === $slug) {
                 return $page;
             }
         }
 
-        return null;
+        return $this->buildNotFoundPage($slug);
     }
 
-    private function BuildPage(string $filePath): Page
+    private function buildPage(string $filePath): Page
     {
         $body = file_get_contents($filePath);
 
@@ -52,16 +49,37 @@ final class Repository
         }
 
         $fileName = (string) pathinfo($filePath, PATHINFO_FILENAME);
-        $slug = $this->NormalizeSlug($fileName);
-        $title = ucwords(str_replace('-', ' ', $slug));
+        $slug = $this->normalizeSlug($fileName);
+        $extractedTitle = $this->extractTitle($body);
+        $title = $extractedTitle !== ''
+            ? $extractedTitle
+            : ucwords(str_replace('-', ' ', $slug));
 
         return new Page($slug, $title, $body);
     }
 
-    private function NormalizeSlug(string $value): string
+    private function extractTitle(string $content): string
+    {
+        if (!preg_match('/^\s*#\s+(.+)$/m', $content, $matches)) {
+            return '';
+        }
+
+        return trim($matches[1]);
+    }
+
+    private function normalizeSlug(string $value): string
     {
         $slug = strtolower(trim($value));
         $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
         return trim($slug, '-') ?: 'untitled';
+    }
+
+    private function buildNotFoundPage(string $slug): Page
+    {
+        return new Page(
+            $slug,
+            'Página não encontrada',
+            "# Página não encontrada\n\nO conteúdo solicitado não existe."
+        );
     }
 }

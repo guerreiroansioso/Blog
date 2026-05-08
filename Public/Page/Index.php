@@ -7,4 +7,4 @@ require_once dirname(__DIR__, 2) . '/Index.php';
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/page';
 $slug = isset($_GET['slug']) ? (string) $_GET['slug'] : '';
 
-RunApplication($requestUri, $slug);
+runApplication($requestUri, $slug);
