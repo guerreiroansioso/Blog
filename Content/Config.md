@@ -1,0 +1,3 @@
+- site_name: Blog
+- display_name: Blog do Felipão
+- description: Um projeto de blog básico.

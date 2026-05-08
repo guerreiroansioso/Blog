@@ -43,6 +43,26 @@ body {
 .hero h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2.2rem); }
 .hero p { margin: 10px 0 0; color: #ecfeff; opacity: 1; }
 
+.heroNav {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.heroNav a {
+  text-decoration: none;
+  color: #ecfeff;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(236, 254, 255, 0.35);
+  padding-bottom: 2px;
+}
+
+.heroNav a:hover {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.75);
+}
+
 .content { padding: 22px; }
 
 .list {
@@ -76,6 +96,11 @@ body {
 .wrap {
   width: min(var(--content-width), 92vw);
   margin: 42px auto;
+}
+
+.pageHero {
+  margin-bottom: 14px;
+  border-radius: var(--radius);
 }
 
 .topbar { margin-bottom: 14px; }

@@ -13,9 +13,13 @@ final class Responder {
 
     public function renderHome(): void {
         $pages = $this->repository->listPages();
+        $menuItems = $this->repository->listMenuItems();
+        $siteConfig = $this->repository->loadSiteConfig();
         echo $this->viewRenderer->render('Home', [
-            'pageTitle' => 'Lista de Páginas',
+            'pageTitle' => $siteConfig->siteName(),
             'items' => $pages,
+            'menuItems' => $menuItems,
+            'siteConfig' => $siteConfig,
         ]);
     }
 
@@ -28,9 +32,13 @@ final class Responder {
         }
 
         $contentHtml = $this->parser->parse($page->body());
+        $menuItems = $this->repository->listMenuItems();
+        $siteConfig = $this->repository->loadSiteConfig();
         echo $this->viewRenderer->render('Page', [
-            'pageTitle' => $page->title(),
+            'pageTitle' => $page->title() . ' | ' . $siteConfig->siteName(),
             'contentHtml' => $contentHtml,
+            'menuItems' => $menuItems,
+            'siteConfig' => $siteConfig,
         ]);
     }
 
