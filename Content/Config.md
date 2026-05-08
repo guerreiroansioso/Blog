@@ -1,3 +1,4 @@
-- site_name: Blog
-- display_name: Blog do Felipão
-- description: Um projeto de blog básico.
+- site_name: Site de Conteúdo
+- display_name: Lista de Páginas
+- description: Escolha um conteúdo para abrir.
+- hide_page_list: yes

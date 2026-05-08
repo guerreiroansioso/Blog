@@ -19,9 +19,11 @@
         <?php endforeach; ?>
       </nav>
     </section>
-    <div class="topbar">
-      <a class="back" href="/">← Voltar para lista</a>
-    </div>
+    <?php if ($showBackLink): ?>
+      <div class="topbar">
+        <a class="back" href="/">← Voltar para lista</a>
+      </div>
+    <?php endif; ?>
 
     <article class="card">
       <main><?= $contentHtml ?></main>

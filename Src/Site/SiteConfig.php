@@ -9,22 +9,12 @@ final class SiteConfig
     public function __construct(
         private string $siteName,
         private string $displayName,
-        private string $description
-    ) {
-    }
+        private string $description,
+        private bool $hidePageList
+    ) {}
 
-    public function siteName(): string
-    {
-        return $this->siteName;
-    }
-
-    public function displayName(): string
-    {
-        return $this->displayName;
-    }
-
-    public function description(): string
-    {
-        return $this->description;
-    }
+    public function siteName(): string { return $this->siteName; }
+    public function displayName(): string { return $this->displayName; }
+    public function description(): string { return $this->description; }
+    public function hidePageList(): bool { return $this->hidePageList; }
 }

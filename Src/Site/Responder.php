@@ -12,9 +12,23 @@ final class Responder {
     ) {}
 
     public function renderHome(): void {
-        $pages = $this->repository->listPages();
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
+
+        if ($siteConfig->hidePageList()) {
+            $homePage = $this->repository->loadHomePage();
+            $contentHtml = $this->parser->parse($homePage->body());
+            echo $this->viewRenderer->render('Page', [
+                'pageTitle' => $siteConfig->siteName(),
+                'contentHtml' => $contentHtml,
+                'menuItems' => $menuItems,
+                'siteConfig' => $siteConfig,
+                'showBackLink' => false,
+            ]);
+            return;
+        }
+
+        $pages = $this->repository->listPages();
         echo $this->viewRenderer->render('Home', [
             'pageTitle' => $siteConfig->siteName(),
             'items' => $pages,
@@ -39,6 +53,7 @@ final class Responder {
             'contentHtml' => $contentHtml,
             'menuItems' => $menuItems,
             'siteConfig' => $siteConfig,
+            'showBackLink' => true,
         ]);
     }
 

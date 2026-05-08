@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Site;
 
 final class Repository {
-    private const INTERNAL_FILES = ['Menu.md', 'Config.md'];
-    private const INTERNAL_SLUGS = ['menu', 'config'];
+    private const INTERNAL_FILES = ['Menu.md', 'Config.md', 'Home.md'];
+    private const INTERNAL_SLUGS = ['menu', 'config', 'home'];
 
     private PageFactory $pageFactory;
 
@@ -78,6 +78,7 @@ final class Repository {
             'site_name' => 'Site',
             'display_name' => 'Lista de Páginas',
             'description' => 'Escolha um conteúdo para abrir.',
+            'hide_page_list' => 'no',
         ];
 
         $configFile = rtrim($this->contentDirectory, '/') . '/Config.md';
@@ -96,7 +97,7 @@ final class Repository {
         foreach ($lines as $line) {
             $matches = [];
             $isMatch = preg_match(
-                '/^-\s*(site_name|display_name|description)\s*:\s*(.+)$/i',
+                '/^-\s*(site_name|display_name|description|hide_page_list)\s*:\s*(.+)$/i',
                 trim($line),
                 $matches
             ) === 1;
@@ -112,8 +113,18 @@ final class Repository {
         return new SiteConfig(
             $config['site_name'],
             $config['display_name'],
-            $config['description']
+            $config['description'],
+            $this->toBool($config['hide_page_list'])
         );
+    }
+
+    public function loadHomePage(): Page {
+        $homeFile = rtrim($this->contentDirectory, '/') . '/Home.md';
+        if (!is_file($homeFile)) {
+            return $this->pageFactory->notFound('home');
+        }
+
+        return $this->pageFactory->fromFile($homeFile);
     }
 
     private function isInternalFile(string $filePath): bool {
@@ -123,5 +134,10 @@ final class Repository {
 
     private function isInternalSlug(string $slug): bool {
         return in_array($slug, self::INTERNAL_SLUGS, true);
+    }
+
+    private function toBool(string $value): bool {
+        $normalized = strtolower(trim($value));
+        return in_array($normalized, ['1', 'true', 'yes', 'sim'], true);
     }
 }
