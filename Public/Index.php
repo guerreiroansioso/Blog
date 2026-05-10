@@ -118,8 +118,9 @@ require_once dirname(__DIR__) . '/Index.php';
 
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+$pageNumber = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
 match (tryServePublicAsset($requestUri)) {
     true => exit,
-    false => runApplication($requestUri, $slug),
+    false => runApplication($requestUri, $slug, $pageNumber),
 };

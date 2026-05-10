@@ -44,6 +44,8 @@ A lógica também mudou. Nos primeiros blogs, a publicação era frequentemente 
 
 Apesar dessa profissionalização, os melhores blogs ainda preservam uma característica dos primeiros tempos: a construção de uma voz própria. Um blog eficiente não é apenas um repositório de textos. Ele precisa ter identidade, coerência e propósito.
 
+# Pagination
+
 ## Como o blog é utilizado atualmente
 
 Atualmente, o blog pode desempenhar muitas funções dentro de um projeto digital. Em sua forma mais simples, ele serve para publicar informações de interesse de um público específico. Em uma estrutura mais estratégica, torna-se um canal de atração, relacionamento, educação e conversão.
@@ -87,6 +89,8 @@ Isso acontece porque os blogs são estruturas adequadas para responder perguntas
 A otimização para mecanismos de busca, conhecida como SEO, tornou-se uma prática importante na produção de blogs. Ela envolve escolher temas relevantes, compreender as palavras usadas pelo público, estruturar bem os textos, criar links internos, melhorar a velocidade do site e oferecer uma boa experiência de navegação.
 
 No entanto, um erro comum é escrever apenas para os algoritmos. Um blog profissional deve considerar os buscadores, mas precisa escrever principalmente para pessoas. O objetivo não é apenas atrair cliques, mas entregar uma resposta satisfatória. Quando o conteúdo é útil, claro e confiável, ele tem mais chances de gerar resultados duradouros.
+
+# Pagination
 
 ## Principais cases de sucesso
 

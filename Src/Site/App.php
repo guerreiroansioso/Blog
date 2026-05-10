@@ -26,13 +26,17 @@ final class App {
         ];
     }
 
-    public function handle(string $requestUri, string $slug = ''): void {
+    public function handle(
+        string $requestUri,
+        string $slug = '',
+        int $pageNumber = 1
+    ): void {
         $path = parse_url($requestUri, PHP_URL_PATH) ?? '';
 
         foreach ($this->routeHandlers as $routeHandler) {
             if (!$routeHandler->supports($path)) { continue; }
 
-            $routeHandler->handle($slug, $this->responseHandler);
+            $routeHandler->handle($slug, $this->responseHandler, $pageNumber);
             return;
         }
     }

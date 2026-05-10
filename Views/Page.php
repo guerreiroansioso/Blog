@@ -29,6 +29,19 @@
     <div class="<?= $sidebarHtml !== '' ? 'pageLayout hasSidebar' : 'pageLayout' ?>">
       <article class="card">
         <main><?= $contentHtml ?></main>
+        <?php if ($pagination['links'] !== []): ?>
+          <nav class="pagination" aria-label="Paginação">
+            <?php foreach ($pagination['links'] as $paginationLink): ?>
+              <?php if ($paginationLink['isCurrent']): ?>
+                <span aria-current="page"><?= htmlspecialchars($paginationLink['label'], ENT_QUOTES, 'UTF-8') ?></span>
+              <?php else: ?>
+                <a href="<?= htmlspecialchars($paginationLink['href'], ENT_QUOTES, 'UTF-8') ?>">
+                  <?= htmlspecialchars($paginationLink['label'], ENT_QUOTES, 'UTF-8') ?>
+                </a>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </nav>
+        <?php endif; ?>
       </article>
       <?php if ($sidebarHtml !== ''): ?>
         <div class="sidebarStack">

@@ -20,6 +20,8 @@ O conceito também envolve a ideia de adaptação. Um sistema inteligente artifi
 
 A inteligência artificial é composta por diversas áreas de estudo, como aprendizado de máquina, processamento de linguagem, visão computacional, raciocínio automatizado, representação do conhecimento e tomada de decisão. Todas essas áreas procuram desenvolver formas de fazer com que sistemas computacionais executem atividades que exigem análise, interpretação e resposta estruturada.
 
+# Pagination
+
 ## Dados, algoritmos e modelos
 
 É importante compreender que a inteligência artificial depende de dados. Os dados são a base a partir da qual os sistemas identificam padrões e constroem respostas. A qualidade, a quantidade e a organização desses dados influenciam diretamente o funcionamento do sistema. Quando os dados são limitados, incompletos ou enviesados, o desempenho da inteligência artificial também pode ser afetado.
@@ -43,6 +45,8 @@ Também é necessário destacar que a inteligência artificial não é uma entid
 A palavra “inteligência”, nesse contexto, não deve ser interpretada exatamente da mesma forma que na inteligência humana. Na inteligência artificial, ela se refere à capacidade funcional de resolver problemas, processar informações, reconhecer padrões e produzir decisões ou respostas úteis. Portanto, trata-se de uma inteligência operacional, construída artificialmente e limitada por parâmetros técnicos.
 
 A inteligência artificial também está relacionada à automação, mas não se resume a ela. A automação tradicional executa tarefas de acordo com instruções fixas. A inteligência artificial, por sua vez, pode analisar dados variáveis, reconhecer padrões e adaptar respostas. Essa diferença é essencial para compreender por que ela representa uma etapa mais sofisticada no desenvolvimento de sistemas computacionais.
+
+# Pagination
 
 ## Fundamentos técnicos
 

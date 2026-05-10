@@ -22,6 +22,10 @@ O arquivo *Menu.md* controla os links exibidos no menu superior. Cada link do me
 
 O arquivo *Home.md* tem uma função especial quando a configuração *hidePageList* está ativada. Nesse caso, ele deixa de ser apenas um arquivo interno e passa a fornecer o conteúdo principal da página inicial. Ele pode ser escrito como qualquer outra página *Markdown*, incluindo título, subtítulos, parágrafos e seções laterais. Mesmo assim, *Home.md* não aparece na lista de páginas comuns, porque é tratado como parte da estrutura interna do site.
 
+## Paginação
+
+A paginação pode ser ativada dentro de qualquer página *Markdown* usando uma linha com o título *# Pagination*. O conteúdo antes da primeira ocorrência desse marcador aparece como a primeira parte da página, e cada novo marcador inicia uma nova parte. Quando o site encontra mais de uma parte, ele exibe botões de paginação abaixo do conteúdo principal, permitindo navegar entre as seções do mesmo arquivo sem criar arquivos separados.
+
 ## Sidebars
 
 As *sidebars* são criadas dentro de qualquer página *Markdown* usando uma linha com o título *# Sidebar*. Tudo que vem antes da primeira ocorrência desse título permanece no conteúdo principal da página. Tudo que vem depois passa a ser renderizado na lateral. Se o arquivo tiver mais de uma seção chamada *# Sidebar*, cada uma delas vira um bloco lateral separado. Isso permite colocar resumo, informações extras, observações ou qualquer conteúdo complementar sem misturar esse material com o artigo principal.

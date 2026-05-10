@@ -11,9 +11,16 @@ final class HomeRoute implements RouteHandler {
         return in_array($path, self::SUPPORTED_PATHS, true);
     }
 
-    public function handle(string $slug, ResponseHandler $responseHandler): void {
-        if ($slug !== '') { $responseHandler->renderPage($slug); return; }
+    public function handle(
+        string $slug,
+        ResponseHandler $responseHandler,
+        int $pageNumber
+    ): void {
+        if ($slug !== '') {
+            $responseHandler->renderPage($slug, $pageNumber);
+            return;
+        }
 
-        $responseHandler->renderHome();
+        $responseHandler->renderHome($pageNumber);
     }
 }

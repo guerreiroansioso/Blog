@@ -11,19 +11,24 @@ final class ResponseHandler {
         private ViewRenderer $viewRenderer
     ) {}
 
-    public function renderHome(): void {
+    public function renderHome(int $pageNumber = 1): void {
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
         $footerSections = $this->parseFooterContent($this->repository->loadFooter());
 
         if ($siteConfig->hidePageList()) {
             $homePage = $this->repository->loadHomePage();
-            $content = $this->parsePageContent($homePage->body());
+            $content = $this->parsePageContent(
+                $homePage->body(),
+                $pageNumber,
+                '/'
+            );
             echo $this->viewRenderer->render('Page', [
                 'pageTitle' => $siteConfig->siteName(),
                 'contentHtml' => $content['main'],
                 'sidebarHtml' => $content['sidebar'],
                 'sidebarItems' => $content['sidebars'],
+                'pagination' => $content['pagination'],
                 'menuItems' => $menuItems,
                 'siteConfig' => $siteConfig,
                 'showBackLink' => false,
@@ -42,7 +47,7 @@ final class ResponseHandler {
         ]);
     }
 
-    public function renderPage(string $slug): void {
+    public function renderPage(string $slug, int $pageNumber = 1): void {
         $normalizedSlug = $this->normalizeSlug($slug);
         $page = $this->repository->findBySlug($normalizedSlug);
 
@@ -50,7 +55,11 @@ final class ResponseHandler {
             http_response_code(404);
         }
 
-        $content = $this->parsePageContent($page->body());
+        $content = $this->parsePageContent(
+            $page->body(),
+            $pageNumber,
+            '/page?slug=' . rawurlencode($page->slug())
+        );
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
         $footerSections = $this->parseFooterContent($this->repository->loadFooter());
@@ -59,6 +68,7 @@ final class ResponseHandler {
             'contentHtml' => $content['main'],
             'sidebarHtml' => $content['sidebar'],
             'sidebarItems' => $content['sidebars'],
+            'pagination' => $content['pagination'],
             'menuItems' => $menuItems,
             'siteConfig' => $siteConfig,
             'showBackLink' => true,
@@ -87,15 +97,30 @@ final class ResponseHandler {
     }
 
     /**
-     * @return array{main: string, sidebar: string, sidebars: list<string>}
+     * @return array{
+     *     main: string,
+     *     sidebar: string,
+     *     sidebars: list<string>,
+     *     pagination: array{current: int, total: int, links: list<array{
+     *         label: string,
+     *         href: string,
+     *         isCurrent: bool
+     *     }>}
+     * }
      */
-    private function parsePageContent(string $body): array {
+    private function parsePageContent(
+        string $body,
+        int $pageNumber,
+        string $baseUrl
+    ): array {
         $sections = preg_split('/^\s*#\s+Sidebar\s*$/mi', $body);
         if ($sections === false || count($sections) < 2) {
+            $pages = $this->paginateBody($body, $pageNumber, $baseUrl);
             return [
-                'main' => $this->parser->parse($body),
+                'main' => $this->parser->parse($pages['body']),
                 'sidebar' => '',
                 'sidebars' => [],
+                'pagination' => $pages['pagination'],
             ];
         }
 
@@ -107,11 +132,81 @@ final class ResponseHandler {
             $sidebars[] = $sidebarHtml;
         }
 
+        $pages = $this->paginateBody($sections[0], $pageNumber, $baseUrl);
         return [
-            'main' => $this->parser->parse($sections[0]),
+            'main' => $this->parser->parse($pages['body']),
             'sidebar' => implode("\n", $sidebars),
             'sidebars' => $sidebars,
+            'pagination' => $pages['pagination'],
         ];
+    }
+
+    /**
+     * @return array{
+     *     body: string,
+     *     pagination: array{current: int, total: int, links: list<array{
+     *         label: string,
+     *         href: string,
+     *         isCurrent: bool
+     *     }>}
+     * }
+     */
+    private function paginateBody(
+        string $body,
+        int $pageNumber,
+        string $baseUrl
+    ): array {
+        $sections = preg_split('/^\s*#\s+Pagination\s*$/mi', $body);
+        if ($sections === false) { $sections = [$body]; }
+
+        $sections = array_values(
+            array_filter(
+                $sections,
+                fn(string $section): bool => trim($section) !== ''
+            )
+        );
+        if ($sections === []) { $sections = ['']; }
+
+        $total = count($sections);
+        $current = max(1, min($pageNumber, $total));
+
+        return [
+            'body' => $sections[$current - 1],
+            'pagination' => [
+                'current' => $current,
+                'total' => $total,
+                'links' => $this->buildPaginationLinks($baseUrl, $current, $total),
+            ],
+        ];
+    }
+
+    /**
+     * @return list<array{label: string, href: string, isCurrent: bool}>
+     */
+    private function buildPaginationLinks(
+        string $baseUrl,
+        int $current,
+        int $total
+    ): array {
+        if ($total <= 1) { return []; }
+
+        $links = [];
+        for ($page = 1; $page <= $total; $page++) {
+            $links[] = [
+                'label' => (string) $page,
+                'href' => $this->paginationUrl($baseUrl, $page),
+                'isCurrent' => $page === $current,
+            ];
+        }
+
+        return $links;
+    }
+
+    private function paginationUrl(string $baseUrl, int $page): string {
+        if ($page === 1) { return $baseUrl; }
+
+        $separator = str_contains($baseUrl, '?') ? '&' : '?';
+        return $baseUrl . $separator . 'page=' . $page;
     }
 
     /**

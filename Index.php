@@ -17,6 +17,10 @@ function buildApplication(): App {
     );
 }
 
-function runApplication(string $requestUri, string $slug = ''): void {
-    buildApplication()->handle($requestUri, $slug);
+function runApplication(
+    string $requestUri,
+    string $slug = '',
+    int $pageNumber = 1
+): void {
+    buildApplication()->handle($requestUri, $slug, $pageNumber);
 }
