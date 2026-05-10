@@ -1,4 +1,4 @@
-# Blog: história, conceito e importância na comunicação
+# Blog: história, conceito e importância
 
 O blog é uma das estruturas mais influentes da internet moderna. Antes de as redes sociais se tornarem o principal espaço de circulação de opiniões, notícias e conteúdos pessoais, os blogs já funcionavam como ambientes de publicação independente, permitindo que qualquer pessoa com acesso à web pudesse escrever, organizar ideias, compartilhar experiências e dialogar com leitores.
 
@@ -149,3 +149,48 @@ Sua relevância está na capacidade de unir liberdade editorial, profundidade de
 Mais do que um conjunto de artigos, um blog é uma plataforma de presença, conhecimento e autoridade. Ele permite que uma voz seja ouvida, que uma marca seja reconhecida, que uma comunidade seja formada e que informações importantes permaneçam acessíveis ao longo do tempo.
 
 Por isso, um projeto de blog bem estruturado não deve ser tratado apenas como uma seção de um site. Ele pode ser o centro de uma estratégia digital, a base de uma comunidade e uma fonte contínua de valor para todos que buscam aprender, refletir e se conectar por meio do conhecimento.
+
+# Sidebar
+
+## Resumo
+
+Blogs organizam ideias, fortalecem autoridade e criam um espaço próprio para publicar conteúdos com profundidade.
+
+## Pontos principais
+
+Publicação independente, presença digital, estratégia de conteúdo, construção de comunidade e permanência da informação.
+
+## Exemplos citados
+
+WordPress, Huffington Post, TechCrunch, Neil Patel e Moz Blog.
+
+# Sidebar
+
+## ✨ Publicidade suspeita ✨
+
+**Curso de blogueira em 7 cliques!**
+
+Você já abriu um blog e pensou:  
+“Meu Deus, agora eu preciso ter opinião, identidade visual e constância?”
+
+Calma. Respira. A internet também não sabe muito bem o que está fazendo.
+
+Com o curso, você aprende técnicas absolutamente questionáveis para transformar qualquer pensamento solto em um post com cara de conteúdo premium.
+
+Neste anúncio 100% fictício, você vai encontrar tudo que uma pessoa moderna precisa.
+
+### O que você recebe?
+
+Um método revolucionário para escrever como se tivesse uma equipe inteira por trás, quando na verdade é só você, um café frio e uma aba do navegador pedindo socorro.
+
+Também acompanha um pacote emocional com:
+
+ideias para posts que começam sérias e terminam em desabafo,  
+modelos de introdução para parecer intelectual sem assustar o leitor,  
+e um guia exclusivo para usar a palavra “essencial” em qualquer contexto.
+
+### Oferta imaginária
+
+De **R$ 497,00** por apenas os incríveis **R$ 0,00**, porque este produto não existe.
+
+Mas poderia existir. E talvez venderia.

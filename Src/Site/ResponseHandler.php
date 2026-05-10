@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class Responder {
+final class ResponseHandler {
     public function __construct(
         private Repository $repository,
         private Parser $parser,
@@ -17,10 +17,12 @@ final class Responder {
 
         if ($siteConfig->hidePageList()) {
             $homePage = $this->repository->loadHomePage();
-            $contentHtml = $this->parser->parse($homePage->body());
+            $content = $this->parsePageContent($homePage->body());
             echo $this->viewRenderer->render('Page', [
                 'pageTitle' => $siteConfig->siteName(),
-                'contentHtml' => $contentHtml,
+                'contentHtml' => $content['main'],
+                'sidebarHtml' => $content['sidebar'],
+                'sidebarItems' => $content['sidebars'],
                 'menuItems' => $menuItems,
                 'siteConfig' => $siteConfig,
                 'showBackLink' => false,
@@ -45,12 +47,14 @@ final class Responder {
             http_response_code(404);
         }
 
-        $contentHtml = $this->parser->parse($page->body());
+        $content = $this->parsePageContent($page->body());
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
         echo $this->viewRenderer->render('Page', [
             'pageTitle' => $page->title() . ' | ' . $siteConfig->siteName(),
-            'contentHtml' => $contentHtml,
+            'contentHtml' => $content['main'],
+            'sidebarHtml' => $content['sidebar'],
+            'sidebarItems' => $content['sidebars'],
             'menuItems' => $menuItems,
             'siteConfig' => $siteConfig,
             'showBackLink' => true,
@@ -75,5 +79,33 @@ final class Responder {
         if ($slug === '') { return 'untitled'; }
 
         return $slug;
+    }
+
+    /**
+     * @return array{main: string, sidebar: string, sidebars: list<string>}
+     */
+    private function parsePageContent(string $body): array {
+        $sections = preg_split('/^\s*#\s+Sidebar\s*$/mi', $body);
+        if ($sections === false || count($sections) < 2) {
+            return [
+                'main' => $this->parser->parse($body),
+                'sidebar' => '',
+                'sidebars' => [],
+            ];
+        }
+
+        $sidebars = [];
+        foreach (array_slice($sections, 1) as $section) {
+            $sidebarHtml = $this->parser->parse($section);
+            if ($sidebarHtml === '') { continue; }
+
+            $sidebars[] = $sidebarHtml;
+        }
+
+        return [
+            'main' => $this->parser->parse($sections[0]),
+            'sidebar' => implode("\n", $sidebars),
+            'sidebars' => $sidebars,
+        ];
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Site;
 
 final class App {
-    private Responder $responder;
+    private ResponseHandler $responseHandler;
     private array $routeHandlers;
 
     public function __construct(
@@ -13,7 +13,7 @@ final class App {
         private Parser $parser,
         private ViewRenderer $viewRenderer
     ) {
-        $this->responder = new Responder(
+        $this->responseHandler = new ResponseHandler(
             $this->repository,
             $this->parser,
             $this->viewRenderer
@@ -32,7 +32,7 @@ final class App {
         foreach ($this->routeHandlers as $routeHandler) {
             if (!$routeHandler->supports($path)) { continue; }
 
-            $routeHandler->handle($slug, $this->responder);
+            $routeHandler->handle($slug, $this->responseHandler);
             return;
         }
     }

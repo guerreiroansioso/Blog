@@ -6,5 +6,5 @@ namespace App\Site;
 
 interface RouteHandler {
     public function supports(string $path): bool;
-    public function handle(string $slug, Responder $responder): void;
+    public function handle(string $slug, ResponseHandler $responseHandler): void;
 }

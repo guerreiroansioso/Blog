@@ -26,9 +26,20 @@
       </div>
     <?php endif; ?>
 
-    <article class="card">
-      <main><?= $contentHtml ?></main>
-    </article>
+    <div class="<?= $sidebarHtml !== '' ? 'pageLayout hasSidebar' : 'pageLayout' ?>">
+      <article class="card">
+        <main><?= $contentHtml ?></main>
+      </article>
+      <?php if ($sidebarHtml !== ''): ?>
+        <div class="sidebarStack">
+          <?php foreach ($sidebarItems as $sidebarItem): ?>
+            <aside class="sidebar">
+              <?= $sidebarItem ?>
+            </aside>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 </body>
 </html>

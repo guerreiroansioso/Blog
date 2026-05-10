@@ -15,9 +15,9 @@ final class PageRoute implements RouteHandler {
         return in_array($path, self::SUPPORTED_PATHS, true);
     }
 
-    public function handle(string $slug, Responder $responder): void {
-        if ($slug === '') { $responder->renderMissingSlug(); return; }
+    public function handle(string $slug, ResponseHandler $responseHandler): void {
+        if ($slug === '') { $responseHandler->renderMissingSlug(); return; }
 
-        $responder->renderPage($slug);
+        $responseHandler->renderPage($slug);
     }
 }
