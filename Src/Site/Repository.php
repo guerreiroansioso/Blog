@@ -75,19 +75,29 @@ final class Repository {
 
     public function loadSiteConfig(): SiteConfig {
         $defaults = [
-            'site_name' => 'Site',
-            'display_name' => 'Lista de Páginas',
+            'siteName' => 'Site',
+            'displayName' => 'Lista de Páginas',
             'description' => 'Escolha um conteúdo para abrir.',
-            'hide_page_list' => 'no',
+            'hidePageList' => 'no',
+        ];
+        $configKeys = [
+            'sitename' => 'siteName',
+            'displayname' => 'displayName',
+            'description' => 'description',
+            'hidepagelist' => 'hidePageList',
+            'site_name' => 'siteName',
+            'display_name' => 'displayName',
+            'hide_page_list' => 'hidePageList',
         ];
 
         $configFile = rtrim($this->contentDirectory, '/') . '/Config.md';
         $content = file_get_contents($configFile);
         if ($content === false) {
             return new SiteConfig(
-                $defaults['site_name'],
-                $defaults['display_name'],
-                $defaults['description']
+                $defaults['siteName'],
+                $defaults['displayName'],
+                $defaults['description'],
+                $this->toBool($defaults['hidePageList'])
             );
         }
 
@@ -97,13 +107,13 @@ final class Repository {
         foreach ($lines as $line) {
             $matches = [];
             $isMatch = preg_match(
-                '/^-\s*(site_name|display_name|description|hide_page_list)\s*:\s*(.+)$/i',
+                '/^-\s*(siteName|displayName|description|hidePageList|site_name|display_name|hide_page_list)\s*:\s*(.+)$/i',
                 trim($line),
                 $matches
             ) === 1;
             if (!$isMatch) { continue; }
 
-            $key = strtolower(trim($matches[1]));
+            $key = $configKeys[strtolower(trim($matches[1]))] ?? trim($matches[1]);
             $value = trim($matches[2]);
             if ($value === '') { continue; }
 
@@ -111,10 +121,10 @@ final class Repository {
         }
 
         return new SiteConfig(
-            $config['site_name'],
-            $config['display_name'],
+            $config['siteName'],
+            $config['displayName'],
             $config['description'],
-            $this->toBool($config['hide_page_list'])
+            $this->toBool($config['hidePageList'])
         );
     }
 

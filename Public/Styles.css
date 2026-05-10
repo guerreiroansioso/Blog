@@ -9,6 +9,7 @@
   --shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
   --radius: 16px;
   --content-width: 920px;
+  --page-spacing: 48px;
 }
 
 * { box-sizing: border-box; }
@@ -26,7 +27,7 @@ body {
 
 .container {
   width: min(var(--content-width), 92vw);
-  margin: 48px auto;
+  margin: var(--page-spacing) auto;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -54,13 +55,18 @@ body {
   text-decoration: none;
   color: #ecfeff;
   font-weight: 600;
-  border-bottom: 1px solid rgba(236, 254, 255, 0.35);
-  padding-bottom: 2px;
+  border: 1px solid rgba(236, 254, 255, 0.45);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
 
 .heroNav a:hover {
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  border-bottom-color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.16);
 }
 
 .content { padding: 22px; }
@@ -95,7 +101,7 @@ body {
 
 .wrap {
   width: min(var(--content-width), 92vw);
-  margin: 42px auto;
+  margin: var(--page-spacing) auto;
 }
 
 .pageHero {

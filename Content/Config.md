@@ -1,4 +1,4 @@
-- site_name: Site de Conteúdo
-- display_name: Lista de Páginas
-- description: Escolha um conteúdo para abrir.
-- hide_page_list: yes
+- siteName: Blog do Felipão
+- displayName: Blog do Felipão
+- description: Um projeto de blog.
+- hidePageList: yes
