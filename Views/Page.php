@@ -40,6 +40,18 @@
         </div>
       <?php endif; ?>
     </div>
+    <?php if ($footerSections !== []): ?>
+      <footer class="footer">
+        <?php foreach ($footerSections as $footerSection): ?>
+          <section class="footerSection">
+            <?php if ($footerSection['title'] !== ''): ?>
+              <h2><?= htmlspecialchars($footerSection['title'], ENT_QUOTES, 'UTF-8') ?></h2>
+            <?php endif; ?>
+            <?= $footerSection['content'] ?>
+          </section>
+        <?php endforeach; ?>
+      </footer>
+    <?php endif; ?>
   </div>
 </body>
 </html>

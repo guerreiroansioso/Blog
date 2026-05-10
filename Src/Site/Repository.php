@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Site;
 
 final class Repository {
-    private const INTERNAL_FILES = ['Menu.md', 'Config.md', 'Home.md'];
-    private const INTERNAL_SLUGS = ['menu', 'config', 'home'];
+    private const INTERNAL_FILES = ['Menu.md', 'Config.md', 'Home.md', 'Footer.md'];
+    private const INTERNAL_SLUGS = ['menu', 'config', 'home', 'footer'];
 
     private PageFactory $pageFactory;
 
@@ -135,6 +135,14 @@ final class Repository {
         }
 
         return $this->pageFactory->fromFile($homeFile);
+    }
+
+    public function loadFooter(): string {
+        $footerFile = rtrim($this->contentDirectory, '/') . '/Footer.md';
+        $content = file_get_contents($footerFile);
+        if ($content === false) { return ''; }
+
+        return $content;
     }
 
     private function isInternalFile(string $filePath): bool {

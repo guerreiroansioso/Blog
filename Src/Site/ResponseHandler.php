@@ -14,6 +14,7 @@ final class ResponseHandler {
     public function renderHome(): void {
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
+        $footerSections = $this->parseFooterContent($this->repository->loadFooter());
 
         if ($siteConfig->hidePageList()) {
             $homePage = $this->repository->loadHomePage();
@@ -26,6 +27,7 @@ final class ResponseHandler {
                 'menuItems' => $menuItems,
                 'siteConfig' => $siteConfig,
                 'showBackLink' => false,
+                'footerSections' => $footerSections,
             ]);
             return;
         }
@@ -36,6 +38,7 @@ final class ResponseHandler {
             'items' => $pages,
             'menuItems' => $menuItems,
             'siteConfig' => $siteConfig,
+            'footerSections' => $footerSections,
         ]);
     }
 
@@ -50,6 +53,7 @@ final class ResponseHandler {
         $content = $this->parsePageContent($page->body());
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
+        $footerSections = $this->parseFooterContent($this->repository->loadFooter());
         echo $this->viewRenderer->render('Page', [
             'pageTitle' => $page->title() . ' | ' . $siteConfig->siteName(),
             'contentHtml' => $content['main'],
@@ -58,6 +62,7 @@ final class ResponseHandler {
             'menuItems' => $menuItems,
             'siteConfig' => $siteConfig,
             'showBackLink' => true,
+            'footerSections' => $footerSections,
         ]);
     }
 
@@ -106,6 +111,49 @@ final class ResponseHandler {
             'main' => $this->parser->parse($sections[0]),
             'sidebar' => implode("\n", $sidebars),
             'sidebars' => $sidebars,
+        ];
+    }
+
+    /**
+     * @return list<array{title: string, content: string}>
+     */
+    private function parseFooterContent(string $body): array {
+        $sections = [];
+        $currentTitle = '';
+        $currentBody = [];
+        $lines = preg_split('/\R/', $body) ?: [];
+
+        foreach ($lines as $line) {
+            $matches = [];
+            if (preg_match('/^\s*#{1,3}\s+(.+)$/', $line, $matches) === 1) {
+                $this->appendFooterSection($sections, $currentTitle, $currentBody);
+                $currentTitle = trim($matches[1]);
+                $currentBody = [];
+                continue;
+            }
+
+            $currentBody[] = $line;
+        }
+
+        $this->appendFooterSection($sections, $currentTitle, $currentBody);
+        return $sections;
+    }
+
+    /**
+     * @param list<array{title: string, content: string}> $sections
+     * @param list<string> $body
+     */
+    private function appendFooterSection(
+        array &$sections,
+        string $title,
+        array $body
+    ): void {
+        $content = $this->parser->parse(trim(implode("\n", $body)));
+        if ($title === '' && $content === '') { return; }
+
+        $sections[] = [
+            'title' => $title,
+            'content' => $content,
         ];
     }
 }
