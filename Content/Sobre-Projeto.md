@@ -8,7 +8,11 @@ Para criar uma nova página, basta adicionar um arquivo *Markdown* dentro da pas
 
 ## Escrita em Markdown
 
-O conteúdo das páginas aceita uma forma simples de *Markdown*. Títulos podem ser criados com *#*, *##* e *###*, enquanto os parágrafos são escritos como texto comum separado por linhas em branco. Também é possível usar itálico com um asterisco e negrito com dois asteriscos. O *parser* do projeto é intencionalmente pequeno, então ele não tenta cobrir todos os recursos de *Markdown*; ele existe para manter a escrita simples e previsível dentro do site.
+O conteúdo das páginas aceita uma forma simples de *Markdown*. Títulos podem ser criados com *#*, *##* e *###*, enquanto os parágrafos são escritos como texto comum separado por linhas em branco. Também é possível usar itálico com um asterisco e negrito com dois asteriscos.
+
+Além disso, o site suporta links no formato *[texto](url)*, imagens no formato *![alt](/images/arquivo.jpg)* e listas. As listas podem ser simples com *-* (ou *+* e ***) e numéricas com *1.*, *2.*, *3.*, incluindo sublistas por indentação e combinações mistas entre lista simples e numérica.
+
+O *parser* do projeto é intencionalmente pequeno e cobre apenas os recursos necessários para manter a escrita previsível dentro do site.
 
 ## Configuração do site
 

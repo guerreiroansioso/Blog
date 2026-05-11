@@ -1,5 +1,5 @@
 - [Início](/)
-- [About Project](/page?slug=about-project)
+- [Sobre Projeto](/page?slug=sobre-projeto)
 - [Inteligência Artificial](/page?slug=inteligencia-artificial)
 - [Museu de Arte de Londrina](/page?slug=museu-de-arte)
 - [Exemplo de Listas](/page?slug=exemplo-de-listas)
