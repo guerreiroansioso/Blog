@@ -2,9 +2,18 @@
 
 declare(strict_types=1);
 
+function normalizeRequestUriPathLowercase(string $requestUri): string {
+    $parts = parse_url($requestUri);
+    if ($parts === false) { return strtolower($requestUri); }
+
+    $path = strtolower($parts['path'] ?? '');
+    $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+    return $path . $query;
+}
+
 function tryServePublicAsset(string $requestUri): bool {
     $path = parse_url($requestUri, PHP_URL_PATH) ?? '';
-    $path = mapAssetAlias($path);
+    $path = mapAssetAlias(strtolower($path));
 
     if (!isAssetRequest($path)) { return false; }
 
@@ -25,9 +34,8 @@ function isAssetRequest(string $path): bool {
 }
 
 function mapAssetAlias(string $path): string {
-    $lowerPath = strtolower($path);
-    return match ($lowerPath) {
-        '/style.css', '/styles.css' => '/Styles.css',
+    return match ($path) {
+        '/style.css', '/styles.css' => '/styles.css',
         default => $path,
     };
 }
@@ -117,8 +125,11 @@ function sendAsset(string $absolutePath): void
 require_once dirname(__DIR__) . '/Index.php';
 
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$requestUri = normalizeRequestUriPathLowercase($requestUri);
 $slug = isset($_GET['slug']) ? $_GET['slug'] : '';
-$pageNumber = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$pageNumber = isset($_GET['page'])
+    ? (filter_var($_GET['page'], FILTER_VALIDATE_INT) ?: 1)
+    : 1;
 
 match (tryServePublicAsset($requestUri)) {
     true => exit,

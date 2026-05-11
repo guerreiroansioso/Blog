@@ -8,7 +8,7 @@ final class PageRoute implements RouteHandler {
     private array $supportedPathsMap = [
         '/page' => true,
         '/page/' => true,
-        '/page/Index.php' => true,
+        '/page/index.php' => true,
     ];
 
     public function supports(string $path): bool {

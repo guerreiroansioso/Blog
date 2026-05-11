@@ -80,7 +80,7 @@ final class Repository {
             if (!$isMatch) { continue; }
 
             $label = trim($matches[1]);
-            $href = trim($matches[2]);
+            $href = $this->normalizeHrefPathLowercase(trim($matches[2]));
             if ($label === '' || $href === '') { continue; }
 
             $items[] = new MenuItem($label, $href);
@@ -173,5 +173,18 @@ final class Repository {
     private function toBool(string $value): bool {
         $normalized = strtolower(trim($value));
         return isset($this->trueValuesMap[$normalized]);
+    }
+
+    private function normalizeHrefPathLowercase(string $href): string {
+        if ($href === '' || $href[0] !== '/') { return $href; }
+
+        $parts = parse_url($href);
+        if ($parts === false) { return strtolower($href); }
+
+        $path = strtolower($parts['path'] ?? '');
+        $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+        $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+
+        return $path . $query . $fragment;
     }
 }

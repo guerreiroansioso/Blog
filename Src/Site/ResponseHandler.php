@@ -192,7 +192,7 @@ final class ResponseHandler {
         $links = [];
         for ($page = 1; $page <= $total; $page++) {
             $links[] = [
-                'label' => (string) $page,
+                'label' => number_format($page, 0, '.', ''),
                 'href' => $this->paginationUrl($baseUrl, $page),
                 'isCurrent' => $page === $current,
             ];

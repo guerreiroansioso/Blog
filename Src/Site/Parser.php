@@ -110,9 +110,9 @@ final class Parser {
     }
 
     private function appendListItem(array &$html, array &$listStack, array $item): void {
-        $targetLevel = (int) $item['level'];
-        $targetType = (string) $item['type'];
-        $targetText = (string) $item['text'];
+        $targetLevel = $item['level'];
+        $targetType = $item['type'];
+        $targetText = $item['text'];
 
         if ($targetText === '') { return; }
 
