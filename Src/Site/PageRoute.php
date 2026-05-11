@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Site;
 
 final class PageRoute implements RouteHandler {
-    private const SUPPORTED_PATHS = [
-        '/page',
-        '/page/',
-        '/page/Index.php',
+    private array $supportedPathsMap = [
+        '/page' => true,
+        '/page/' => true,
+        '/page/Index.php' => true,
     ];
 
     public function supports(string $path): bool {
-        return in_array($path, self::SUPPORTED_PATHS, true);
+        return isset($this->supportedPathsMap[$path]);
     }
 
     public function handle(

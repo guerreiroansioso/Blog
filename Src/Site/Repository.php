@@ -5,8 +5,24 @@ declare(strict_types=1);
 namespace App\Site;
 
 final class Repository {
-    private const INTERNAL_FILES = ['Menu.md', 'Config.md', 'Home.md', 'Footer.md'];
-    private const INTERNAL_SLUGS = ['menu', 'config', 'home', 'footer'];
+    private array $internalFilesMap = [
+        'Menu.md' => true,
+        'Config.md' => true,
+        'Home.md' => true,
+        'Footer.md' => true,
+    ];
+    private array $internalSlugsMap = [
+        'menu' => true,
+        'config' => true,
+        'home' => true,
+        'footer' => true,
+    ];
+    private array $trueValuesMap = [
+        '1' => true,
+        'true' => true,
+        'yes' => true,
+        'sim' => true,
+    ];
 
     private PageFactory $pageFactory;
 
@@ -147,15 +163,15 @@ final class Repository {
 
     private function isInternalFile(string $filePath): bool {
         $fileName = pathinfo($filePath, PATHINFO_BASENAME);
-        return in_array($fileName, self::INTERNAL_FILES, true);
+        return isset($this->internalFilesMap[$fileName]);
     }
 
     private function isInternalSlug(string $slug): bool {
-        return in_array($slug, self::INTERNAL_SLUGS, true);
+        return isset($this->internalSlugsMap[$slug]);
     }
 
     private function toBool(string $value): bool {
         $normalized = strtolower(trim($value));
-        return in_array($normalized, ['1', 'true', 'yes', 'sim'], true);
+        return isset($this->trueValuesMap[$normalized]);
     }
 }

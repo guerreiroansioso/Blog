@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Site;
 
 final class HomeRoute implements RouteHandler {
-    private const SUPPORTED_PATHS = ['/', ''];
+    private array $supportedPathsMap = [
+        '/' => true,
+        '' => true,
+    ];
 
     public function supports(string $path): bool {
-        return in_array($path, self::SUPPORTED_PATHS, true);
+        return isset($this->supportedPathsMap[$path]);
     }
 
     public function handle(

@@ -16,33 +16,33 @@ final class ResponseHandler {
         $siteConfig = $this->repository->loadSiteConfig();
         $footerSections = $this->parseFooterContent($this->repository->loadFooter());
 
-        if ($siteConfig->hidePageList()) {
-            $homePage = $this->repository->loadHomePage();
-            $content = $this->parsePageContent(
-                $homePage->body(),
-                $pageNumber,
-                '/'
-            );
-            echo $this->viewRenderer->render('Page', [
+        if (!$siteConfig->hidePageList()) {
+            $pages = $this->repository->listPages();
+            echo $this->viewRenderer->render('Home', [
                 'pageTitle' => $siteConfig->siteName(),
-                'contentHtml' => $content['main'],
-                'sidebarHtml' => $content['sidebar'],
-                'sidebarItems' => $content['sidebars'],
-                'pagination' => $content['pagination'],
+                'items' => $pages,
                 'menuItems' => $menuItems,
                 'siteConfig' => $siteConfig,
-                'showBackLink' => false,
                 'footerSections' => $footerSections,
             ]);
             return;
         }
 
-        $pages = $this->repository->listPages();
-        echo $this->viewRenderer->render('Home', [
+        $homePage = $this->repository->loadHomePage();
+        $content = $this->parsePageContent(
+            $homePage->body(),
+            $pageNumber,
+            '/'
+        );
+        echo $this->viewRenderer->render('Page', [
             'pageTitle' => $siteConfig->siteName(),
-            'items' => $pages,
+            'contentHtml' => $content['main'],
+            'sidebarHtml' => $content['sidebar'],
+            'sidebarItems' => $content['sidebars'],
+            'pagination' => $content['pagination'],
             'menuItems' => $menuItems,
             'siteConfig' => $siteConfig,
+            'showBackLink' => false,
             'footerSections' => $footerSections,
         ]);
     }
@@ -51,9 +51,7 @@ final class ResponseHandler {
         $normalizedSlug = $this->normalizeSlug($slug);
         $page = $this->repository->findBySlug($normalizedSlug);
 
-        if ($page->title() === 'Página não encontrada') {
-            http_response_code(404);
-        }
+        if ($page->isNotFound()) { http_response_code(404); }
 
         $content = $this->parsePageContent(
             $page->body(),
@@ -90,10 +88,11 @@ final class ResponseHandler {
         $slug = strtolower(trim($value));
         $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
         $slug = trim($slug, '-');
-        
-        if ($slug === '') { return 'untitled'; }
 
-        return $slug;
+        return match ($slug === '') {
+            true => 'untitled',
+            false => $slug,
+        };
     }
 
     /**
@@ -205,7 +204,10 @@ final class ResponseHandler {
     private function paginationUrl(string $baseUrl, int $page): string {
         if ($page === 1) { return $baseUrl; }
 
-        $separator = str_contains($baseUrl, '?') ? '&' : '?';
+        $separator = match (str_contains($baseUrl, '?')) {
+            true => '&',
+            false => '?',
+        };
         return $baseUrl . $separator . 'page=' . $page;
     }
 

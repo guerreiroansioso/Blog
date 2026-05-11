@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class Page {
+class Page {
     public function __construct(
         private string $slug,
         private string $title,
@@ -14,4 +14,5 @@ final class Page {
     public function slug(): string { return $this->slug; }
     public function title(): string { return $this->title; }
     public function body(): string { return $this->body; }
+    public function isNotFound(): bool { return false; }
 }

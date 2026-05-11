@@ -19,11 +19,7 @@ final class App {
             $this->viewRenderer
         );
 
-        $this->routeHandlers = [
-            new HomeRoute(),
-            new PageRoute(),
-            new NotFoundRoute(),
-        ];
+        $this->routeHandlers = (new RouteHandlerFactory())->createAll();
     }
 
     public function handle(

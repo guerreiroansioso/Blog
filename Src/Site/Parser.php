@@ -10,6 +10,12 @@ final class Parser {
         '## ' => 'h2',
         '# ' => 'h1',
     ];
+    /** @var list<LineParseStrategy> */
+    private array $lineStrategies;
+
+    public function __construct() {
+        $this->lineStrategies = (new LineParseStrategyFactory())->createAll();
+    }
 
     public function parse(string $content): string {
         $lines = preg_split('/\R/', $content) ?: [];
@@ -21,7 +27,7 @@ final class Parser {
             if ($trimmed === '') { continue; }
 
             $item = $this->parseListItem($line);
-            if ($item !== null) {
+            if (($item['isList'] ?? false) === true) {
                 $this->appendListItem($html, $listStack, $item);
                 continue;
             }
@@ -34,7 +40,7 @@ final class Parser {
         return implode("\n", $html);
     }
 
-    private function inline(string $text): string {
+    public function inline(string $text): string {
         $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
         $escaped = preg_replace_callback(
             '/\[(.+?)\]\((.+?)\)/',
@@ -58,7 +64,7 @@ final class Parser {
         return $escaped;
     }
 
-    private function buildHeading(string $line): string {
+    public function buildHeading(string $line): string {
         foreach (self::HEADING_MAP as $prefix => $tag) {
             if (!str_starts_with($line, $prefix)) { continue; }
 
@@ -68,11 +74,12 @@ final class Parser {
         return '';
     }
 
-    private function parseListItem(string $line): ?array {
+    private function parseListItem(string $line): array {
         $matches = [];
         $isUnordered = preg_match('/^(\s*)[-*+]\s+(.+)$/', $line, $matches) === 1;
         if ($isUnordered) {
             return [
+                'isList' => true,
                 'level' => $this->indentationLevel($matches[1] ?? ''),
                 'type' => 'ul',
                 'text' => trim($matches[2] ?? ''),
@@ -82,13 +89,19 @@ final class Parser {
         $isOrdered = preg_match('/^(\s*)\d+\.\s+(.+)$/', $line, $matches) === 1;
         if ($isOrdered) {
             return [
+                'isList' => true,
                 'level' => $this->indentationLevel($matches[1] ?? ''),
                 'type' => 'ol',
                 'text' => trim($matches[2] ?? ''),
             ];
         }
 
-        return null;
+        return [
+            'isList' => false,
+            'level' => 0,
+            'type' => '',
+            'text' => '',
+        ];
     }
 
     private function indentationLevel(string $indent): int {
@@ -173,20 +186,18 @@ final class Parser {
     }
 
     private function appendParsedLine(array &$html, string $line): void {
-        $imageHtml = $this->buildImage($line);
-        if ($imageHtml !== '') {
-            $html[] = $imageHtml;
+        foreach ($this->lineStrategies as $lineStrategy) {
+            if (!$lineStrategy->supports($line)) { continue; }
+
+            $parsedLine = $lineStrategy->parse($line, $this);
+            if ($parsedLine === '') { continue; }
+
+            $html[] = $parsedLine;
             return;
         }
-
-        $headingHtml = $this->buildHeading($line);
-        $html[] = match ($headingHtml !== '') {
-            true => $headingHtml,
-            false => '<p>' . $this->inline($line) . '</p>',
-        };
     }
 
-    private function buildImage(string $line): string {
+    public function buildImage(string $line): string {
         $matches = [];
         $isImage = preg_match('/^!\[(.*?)\]\((.+)\)$/', $line, $matches) === 1;
         if (!$isImage) { return ''; }

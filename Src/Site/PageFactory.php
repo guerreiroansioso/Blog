@@ -14,15 +14,16 @@ final class PageFactory {
         $fileName = pathinfo($filePath, PATHINFO_FILENAME);
         $slug = $this->normalizeSlug($fileName);
         $title = $this->extractTitle($body);
-        if ($title === '') {
-            $title = ucwords(str_replace('-', ' ', $slug));
-        }
+        $title = match ($title === '') {
+            true => ucwords(str_replace('-', ' ', $slug)),
+            false => $title,
+        };
 
         return new Page($slug, $title, $body);
     }
 
     public function notFound(string $slug): Page {
-        return new Page(
+        return new NotFoundPage(
             $slug,
             'Página não encontrada',
             "# Página não encontrada\n\nO conteúdo solicitado não existe."
@@ -42,8 +43,9 @@ final class PageFactory {
         $slug = strtolower(trim($value));
         $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
         $slug = trim($slug, '-');
-        if ($slug === '') { return 'untitled'; }
-
-        return $slug;
+        return match ($slug === '') {
+            true => 'untitled',
+            false => $slug,
+        };
     }
 }
