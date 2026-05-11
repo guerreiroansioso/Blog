@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Site;
 
-final class SiteConfig
-{
+final class SiteConfig {
     public function __construct(
         private string $siteName,
         private string $displayName,
