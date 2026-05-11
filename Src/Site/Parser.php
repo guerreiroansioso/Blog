@@ -14,14 +14,23 @@ final class Parser {
     public function parse(string $content): string {
         $lines = preg_split('/\R/', $content) ?: [];
         $html = [];
+        $listStack = [];
 
         foreach ($lines as $line) {
             $trimmed = trim($line);
             if ($trimmed === '') { continue; }
 
+            $item = $this->parseListItem($line);
+            if ($item !== null) {
+                $this->appendListItem($html, $listStack, $item);
+                continue;
+            }
+
+            $this->closeAllLists($html, $listStack);
             $this->appendParsedLine($html, $trimmed);
         }
 
+        $this->closeAllLists($html, $listStack);
         return implode("\n", $html);
     }
 
@@ -57,6 +66,110 @@ final class Parser {
         }
 
         return '';
+    }
+
+    private function parseListItem(string $line): ?array {
+        $matches = [];
+        $isUnordered = preg_match('/^(\s*)[-*+]\s+(.+)$/', $line, $matches) === 1;
+        if ($isUnordered) {
+            return [
+                'level' => $this->indentationLevel($matches[1] ?? ''),
+                'type' => 'ul',
+                'text' => trim($matches[2] ?? ''),
+            ];
+        }
+
+        $isOrdered = preg_match('/^(\s*)\d+\.\s+(.+)$/', $line, $matches) === 1;
+        if ($isOrdered) {
+            return [
+                'level' => $this->indentationLevel($matches[1] ?? ''),
+                'type' => 'ol',
+                'text' => trim($matches[2] ?? ''),
+            ];
+        }
+
+        return null;
+    }
+
+    private function indentationLevel(string $indent): int {
+        $normalized = str_replace("\t", '  ', $indent);
+        return intdiv(strlen($normalized), 2);
+    }
+
+    private function appendListItem(array &$html, array &$listStack, array $item): void {
+        $targetLevel = (int) $item['level'];
+        $targetType = (string) $item['type'];
+        $targetText = (string) $item['text'];
+
+        if ($targetText === '') { return; }
+
+        while ($listStack !== [] && $listStack[count($listStack) - 1]['level'] > $targetLevel) {
+            $this->closeCurrentList($html, $listStack);
+        }
+
+        if ($listStack === []) {
+            $this->openList($html, $listStack, $targetType, $targetLevel);
+        }
+
+        while ($listStack[count($listStack) - 1]['level'] < $targetLevel) {
+            $this->openList($html, $listStack, $targetType, $listStack[count($listStack) - 1]['level'] + 1);
+        }
+
+        if ($listStack[count($listStack) - 1]['type'] !== $targetType) {
+            $this->closeCurrentList($html, $listStack);
+            if ($listStack === [] || $listStack[count($listStack) - 1]['level'] !== $targetLevel) {
+                $this->openList($html, $listStack, $targetType, $targetLevel);
+            } else {
+                $this->openList($html, $listStack, $targetType, $targetLevel);
+            }
+        }
+
+        $index = count($listStack) - 1;
+        if ($listStack[$index]['liOpen']) {
+            $html[] = '</li>';
+            $listStack[$index]['liOpen'] = false;
+        }
+
+        $html[] = '<li>' . $this->inline($targetText);
+        $listStack[$index]['liOpen'] = true;
+    }
+
+    private function openList(
+        array &$html,
+        array &$listStack,
+        string $type,
+        int $level
+    ): void {
+        $index = count($listStack) - 1;
+        if ($index >= 0 && !$listStack[$index]['liOpen']) {
+            $html[] = '<li>';
+            $listStack[$index]['liOpen'] = true;
+        }
+
+        $html[] = '<' . $type . '>';
+        $listStack[] = ['type' => $type, 'level' => $level, 'liOpen' => false];
+    }
+
+    private function closeCurrentList(array &$html, array &$listStack): void {
+        if ($listStack === []) { return; }
+
+        $current = array_pop($listStack);
+        if (($current['liOpen'] ?? false) === true) {
+            $html[] = '</li>';
+        }
+        $html[] = '</' . ($current['type'] ?? 'ul') . '>';
+
+        $index = count($listStack) - 1;
+        if ($index >= 0 && $listStack[$index]['liOpen']) {
+            $html[] = '</li>';
+            $listStack[$index]['liOpen'] = false;
+        }
+    }
+
+    private function closeAllLists(array &$html, array &$listStack): void {
+        while ($listStack !== []) {
+            $this->closeCurrentList($html, $listStack);
+        }
     }
 
     private function appendParsedLine(array &$html, string $line): void {
