@@ -85,7 +85,7 @@ final class ResponseHandler {
     }
 
     private function normalizeSlug(string $value): string {
-        $slug = strtolower(trim($value));
+        $slug = normalizeRequest(trim($value));
         $slug = preg_replace('/[^a-z0-9\-]+/', '-', $slug) ?? 'untitled';
         $slug = trim($slug, '-');
 

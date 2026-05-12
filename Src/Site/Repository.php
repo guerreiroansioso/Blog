@@ -129,7 +129,7 @@ final class Repository {
             ) === 1;
             if (!$isMatch) { continue; }
 
-            $key = $configKeys[strtolower(trim($matches[1]))] ?? trim($matches[1]);
+            $key = $configKeys[normalizeRequest(trim($matches[1]))] ?? trim($matches[1]);
             $value = trim($matches[2]);
             if ($value === '') { continue; }
 
@@ -171,11 +171,16 @@ final class Repository {
     }
 
     private function toBool(string $value): bool {
-        $normalized = strtolower(trim($value));
+        $normalized = normalizeRequest(trim($value));
         return isset($this->trueValuesMap[$normalized]);
     }
 
     private function normalizeHrefPathLowercase(string $href): string {
+        $lower = strtolower($href);
+        if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://')) {
+            return $href;
+        }
+
         if ($href === '' || $href[0] !== '/') { return $href; }
 
         $parts = parse_url($href);

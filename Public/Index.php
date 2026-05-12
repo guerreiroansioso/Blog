@@ -1,19 +1,11 @@
 <?php
 
 declare(strict_types=1);
-
-function normalizeRequestUriPathLowercase(string $requestUri): string {
-    $parts = parse_url($requestUri);
-    if ($parts === false) { return strtolower($requestUri); }
-
-    $path = strtolower($parts['path'] ?? '');
-    $query = isset($parts['query']) ? '?' . $parts['query'] : '';
-    return $path . $query;
-}
+require_once dirname(__DIR__) . '/Src/Bootstrap/Request.php';
 
 function tryServePublicAsset(string $requestUri): bool {
     $path = parse_url($requestUri, PHP_URL_PATH) ?? '';
-    $path = mapAssetAlias(strtolower($path));
+    $path = mapAssetAlias(normalizeRequest($path));
 
     if (!isAssetRequest($path)) { return false; }
 
@@ -27,7 +19,7 @@ function tryServePublicAsset(string $requestUri): bool {
 function isAssetRequest(string $path): bool {
     if ($path === '' || $path === '/') { return false; }
 
-    $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+    $extension = normalizeRequest(pathinfo($path, PATHINFO_EXTENSION));
     if ($extension === '' || $extension === 'php') { return false; }
 
     return true;
@@ -43,7 +35,7 @@ function mapAssetAlias(string $path): string {
 function isAllowedAsset(string $absolutePath): bool {
     if (!is_file($absolutePath)) { return false; }
 
-    $extension = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
+    $extension = normalizeRequest(pathinfo($absolutePath, PATHINFO_EXTENSION));
     if ($extension === 'php') { return false; }
 
     return true;
@@ -79,10 +71,10 @@ function findMatchingEntry(
     $entries = @scandir($directory);
     if ($entries === false) { return ''; }
 
-    $target = strtolower($segment);
+    $target = normalizeRequest($segment);
     foreach ($entries as $entry) {
         if ($entry === '.' || $entry === '..') { continue; }
-        if (strtolower($entry) !== $target) { continue; }
+        if (normalizeRequest($entry) !== $target) { continue; }
 
         $candidate = $directory . '/' . $entry;
         if ($expectFile && is_file($candidate)) { return $candidate; }
@@ -94,7 +86,7 @@ function findMatchingEntry(
 
 function sendAsset(string $absolutePath): void
 {
-    $extension = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
+    $extension = normalizeRequest(pathinfo($absolutePath, PATHINFO_EXTENSION));
     $mimeByExtension = [
         'css' => 'text/css',
         'js' => 'application/javascript',
@@ -125,7 +117,7 @@ function sendAsset(string $absolutePath): void
 require_once dirname(__DIR__) . '/Index.php';
 
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-$requestUri = normalizeRequestUriPathLowercase($requestUri);
+$requestUri = normalizeRequest($requestUri);
 $slug = isset($_GET['slug']) ? $_GET['slug'] : '';
 $pageNumber = isset($_GET['page'])
     ? (filter_var($_GET['page'], FILTER_VALIDATE_INT) ?: 1)

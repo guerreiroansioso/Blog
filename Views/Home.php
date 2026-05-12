@@ -25,7 +25,7 @@
       <ul class="list">
         <?php foreach ($items as $item): ?>
           <li>
-            <a href="/page?slug=<?= urlencode($item->slug()) ?>">
+            <a href="/page?slug=<?= urlencode(normalizeRequest($item->slug())) ?>">
               <?= htmlspecialchars($item->title(), ENT_QUOTES, 'UTF-8') ?>
             </a>
           </li>

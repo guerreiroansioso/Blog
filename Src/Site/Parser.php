@@ -215,20 +215,22 @@ final class Parser {
     }
 
     private function sanitizeImageSource(string $source): string {
-        $lower = strtolower($source);
-        if (str_starts_with($lower, 'javascript:')) { return ''; }
-        $normalized = preg_replace('#^/Images/#', '/images/', $source) ?? $source;
-        return htmlspecialchars($normalized, ENT_QUOTES, 'UTF-8');
+        $source = trim($source);
+        if ($source === '') { return ''; }
+
+        return htmlspecialchars(normalizeRequest($source), ENT_QUOTES, 'UTF-8');
     }
 
     private function sanitizeLinkSource(string $source): string {
-        $trimmed = trim(htmlspecialchars_decode($source, ENT_QUOTES));
-        if ($trimmed === '') { return ''; }
+        $source = trim($source);
+        if ($source === '') { return ''; }
 
-        $lower = strtolower($trimmed);
-        if (str_starts_with($lower, 'javascript:')) { return ''; }
+        $lower = strtolower($source);
+        if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://')) {
+            return htmlspecialchars($source, ENT_QUOTES, 'UTF-8');
+        }
 
-        return htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars(strtolower($source), ENT_QUOTES, 'UTF-8');
     }
 
     private function buildHeadingHtml(
