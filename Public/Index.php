@@ -3,8 +3,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__) . '/Src/Bootstrap/Request.php';
 
-final class AssetResponder
-{
+final class AssetResponder {
     private const allowedExtensions = [
         'css' => 'text/css',
         'js' => 'application/javascript',
@@ -32,14 +31,12 @@ final class AssetResponder
             $path = substr($path, strlen('/images'));
         }
 
-        $absolutePath = $publicRoot . $path;
-        if (!$absolutePath) {
-            $requestedName = basename($path);
-            foreach (scandir($publicRoot) as $entry) {
-                if (strtolower($entry) === strtolower($requestedName)) {
-                    $absolutePath = realpath($publicRoot . DIRECTORY_SEPARATOR . $entry);
-                    break;
-                }
+        $absolutePath = null;
+        $requestedName = basename($path);
+        foreach (scandir($publicRoot) as $entry) {
+            if (strtolower($entry) === strtolower($requestedName)) {
+                $absolutePath = realpath($publicRoot . DIRECTORY_SEPARATOR . $entry);
+                break;
             }
         }
 
