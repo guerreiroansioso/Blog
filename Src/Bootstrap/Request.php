@@ -9,3 +9,11 @@ function normalizeRequest(array|string $value): array|string {
 
     return strtolower($value);
 }
+
+function parseRequest(): array {
+    $requestUri = normalizeRequest($_SERVER['REQUEST_URI'] ?? '/');
+    $slug = isset($_GET['slug']) ? normalizeRequest($_GET['slug']) : '';
+    $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+
+    return [$requestUri, $slug, $pageNumber];
+}
