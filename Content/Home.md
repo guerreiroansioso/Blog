@@ -167,34 +167,3 @@ Publicação independente, presença digital, estratégia de conteúdo, constru�
 ## Exemplos citados
 
 WordPress, Huffington Post, TechCrunch, Neil Patel e Moz Blog.
-
-# Sidebar
-
-## ✨ Publicidade suspeita ✨
-
-**Curso de blogueira em 7 cliques!**
-
-Você já abriu um blog e pensou:  
-“Meu Deus, agora eu preciso ter opinião, identidade visual e constância?”
-
-Calma. Respira. A internet também não sabe muito bem o que está fazendo.
-
-Com o curso, você aprende técnicas absolutamente questionáveis para transformar qualquer pensamento solto em um post com cara de conteúdo premium.
-
-Neste anúncio 100% fictício, você vai encontrar tudo que uma pessoa moderna precisa.
-
-### O que você recebe?
-
-Um método revolucionário para escrever como se tivesse uma equipe inteira por trás, quando na verdade é só você, um café frio e uma aba do navegador pedindo socorro.
-
-Também acompanha um pacote emocional com:
-
-ideias para posts que começam sérias e terminam em desabafo,  
-modelos de introdução para parecer intelectual sem assustar o leitor,  
-e um guia exclusivo para usar a palavra “essencial” em qualquer contexto.
-
-### Oferta imaginária
-
-De **R$ 497,00** por apenas os incríveis **R$ 0,00**, porque este produto não existe.
-
-Mas poderia existir. E talvez venderia.

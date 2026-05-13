@@ -17,7 +17,9 @@ final class ResponseHandler {
     public function renderHome(int $pageNumber = 1): void {
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
-        $footerSections = $this->parseFooterContent($this->repository->loadFooter());
+        $footerSections = $this->parseFooterContent(
+            $this->repository->loadFooter()
+        );
 
         if (!$siteConfig->hidePageList()) {
             $pages = $this->repository->listPages();
@@ -63,7 +65,9 @@ final class ResponseHandler {
         );
         $menuItems = $this->repository->listMenuItems();
         $siteConfig = $this->repository->loadSiteConfig();
-        $footerSections = $this->parseFooterContent($this->repository->loadFooter());
+        $footerSections = $this->parseFooterContent(
+            $this->repository->loadFooter()
+        );
         echo $this->viewRenderer->render('Page', [
             'pageTitle' => $page->title() . ' | ' . $siteConfig->siteName(),
             'contentHtml' => $content['main'],
@@ -177,7 +181,11 @@ final class ResponseHandler {
             'pagination' => [
                 'current' => $current,
                 'total' => $total,
-                'links' => $this->buildPaginationLinks($baseUrl, $current, $total),
+                'links' => $this->buildPaginationLinks(
+                    $baseUrl,
+                    $current,
+                    $total
+                ),
             ],
         ];
     }
@@ -226,7 +234,11 @@ final class ResponseHandler {
         foreach ($lines as $line) {
             $matches = [];
             if (preg_match('/^\s*#{1,3}\s+(.+)$/', $line, $matches) === 1) {
-                $this->appendFooterSection($sections, $currentTitle, $currentBody);
+                $this->appendFooterSection(
+                    $sections,
+                    $currentTitle,
+                    $currentBody
+                );
                 $currentTitle = trim($matches[1]);
                 $currentBody = [];
                 continue;

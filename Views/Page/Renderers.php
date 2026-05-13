@@ -43,7 +43,9 @@ return [
             <nav class="pagination" aria-label="Paginação">
             <?php foreach ($pagination['links'] as $paginationLink): ?>
                 <?php if ($paginationLink['isCurrent']): ?>
-                <span aria-current="page"><?= $safeText((string) $paginationLink['label']) ?></span>
+                <span aria-current="page">
+                  <?= $safeText((string) $paginationLink['label']) ?>
+                </span>
                 <?php else: ?>
                 <a href="<?= $safeText((string) $paginationLink['href']) ?>">
                   <?= $safeText((string) $paginationLink['label']) ?>
@@ -94,7 +96,9 @@ return [
             'faviconDataUri' => $faviconDataUri,
             'menuHtml' => $menuHtml,
             'contentHtml' => $contentHtml,
-            'pageLayoutClass' => $sidebarHtml !== '' ? 'pageLayout hasSidebar' : 'pageLayout',
+            'pageLayoutClass' => $sidebarHtml !== ''
+                ? 'pageLayout hasSidebar'
+                : 'pageLayout',
             'paginationHtml' => $paginationHtml,
             'sidebarsHtml' => $sidebarsHtml,
             'footerHtml' => $footerHtml,

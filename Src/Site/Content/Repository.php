@@ -127,13 +127,15 @@ final class Repository {
         foreach ($lines as $line) {
             $matches = [];
             $isMatch = preg_match(
-                '/^-\s*(siteName|displayName|description|hidePageList|site_name|display_name|hide_page_list)\s*:\s*(.+)$/i',
+                '/^-\s*(siteName|displayName|description|hidePageList|'
+                . 'site_name|display_name|hide_page_list)\s*:\s*(.+)$/i',
                 trim($line),
                 $matches
             ) === 1;
             if (!$isMatch) { continue; }
 
-            $key = $configKeys[normalizeRequest(trim($matches[1]))] ?? trim($matches[1]);
+            $key = $configKeys[normalizeRequest(trim($matches[1]))]
+                ?? trim($matches[1]);
             $value = trim($matches[2]);
             if ($value === '') { continue; }
 
@@ -181,7 +183,10 @@ final class Repository {
 
     private function normalizeHrefPathLowercase(string $href): string {
         $lower = strtolower($href);
-        if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://')) {
+        if (
+            str_starts_with($lower, 'http://')
+            || str_starts_with($lower, 'https://')
+        ) {
             return $href;
         }
 

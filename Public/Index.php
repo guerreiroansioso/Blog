@@ -35,7 +35,9 @@ final class AssetResponder {
         $requestedName = basename($path);
         foreach (scandir($publicRoot) as $entry) {
             if (strtolower($entry) === strtolower($requestedName)) {
-                $absolutePath = realpath($publicRoot . DIRECTORY_SEPARATOR . $entry);
+                $absolutePath = realpath(
+                    $publicRoot . DIRECTORY_SEPARATOR . $entry
+                );
                 break;
             }
         }
