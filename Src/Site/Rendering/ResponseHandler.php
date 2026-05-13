@@ -102,18 +102,6 @@ final class ResponseHandler {
         };
     }
 
-    /**
-     * @return array{
-     *     main: string,
-     *     sidebar: string,
-     *     sidebars: list<string>,
-     *     pagination: array{current: int, total: int, links: list<array{
-     *         label: string,
-     *         href: string,
-     *         isCurrent: bool
-     *     }>}
-     * }
-     */
     private function parsePageContent(
         string $body,
         int $pageNumber,
@@ -147,16 +135,6 @@ final class ResponseHandler {
         ];
     }
 
-    /**
-     * @return array{
-     *     body: string,
-     *     pagination: array{current: int, total: int, links: list<array{
-     *         label: string,
-     *         href: string,
-     *         isCurrent: bool
-     *     }>}
-     * }
-     */
     private function paginateBody(
         string $body,
         int $pageNumber,
@@ -190,9 +168,6 @@ final class ResponseHandler {
         ];
     }
 
-    /**
-     * @return list<array{label: string, href: string, isCurrent: bool}>
-     */
     private function buildPaginationLinks(
         string $baseUrl,
         int $current,
@@ -222,9 +197,6 @@ final class ResponseHandler {
         return $baseUrl . $separator . 'page=' . $page;
     }
 
-    /**
-     * @return list<array{title: string, content: string}>
-     */
     private function parseFooterContent(string $body): array {
         $sections = [];
         $currentTitle = '';
@@ -251,10 +223,6 @@ final class ResponseHandler {
         return $sections;
     }
 
-    /**
-     * @param list<array{title: string, content: string}> $sections
-     * @param list<string> $body
-     */
     private function appendFooterSection(
         array &$sections,
         string $title,

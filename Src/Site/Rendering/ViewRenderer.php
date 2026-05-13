@@ -11,12 +11,6 @@ final class ViewRenderer {
         $templatePath = rtrim($this->viewsDirectory, '/') .
             '/' . $templateName . '.php';
 
-        if (!is_file($templatePath)) {
-            throw new \RuntimeException(
-                'Template não encontrado: ' . $templatePath
-            );
-        }
-
         extract($data, EXTR_SKIP);
 
         ob_start();
