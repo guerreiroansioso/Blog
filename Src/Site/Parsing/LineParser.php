@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Parsing;
 
-interface LineParseStrategy {
+interface LineParser {
     public function supports(string $line): bool;
     public function parse(string $line, Parser $parser): string;
 }

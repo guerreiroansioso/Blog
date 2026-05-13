@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Parsing;
 
-final class ParagraphLineStrategy implements LineParseStrategy {
+final class ParagraphLineParser implements LineParser {
     public function supports(string $line): bool {
         return true;
     }

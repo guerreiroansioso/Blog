@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Model;
 
 class Page {
     public function __construct(

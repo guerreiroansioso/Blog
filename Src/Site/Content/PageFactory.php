@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Content;
+
+use App\Site\Model\NotFoundPage;
+use App\Site\Model\Page;
 
 final class PageFactory {
     public function fromFile(string $filePath): Page {

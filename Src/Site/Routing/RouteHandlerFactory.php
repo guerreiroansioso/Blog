@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Routing;
 
 final class RouteHandlerFactory {
     /**

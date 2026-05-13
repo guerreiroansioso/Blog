@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Content;
+
+use App\Site\Model\MenuItem;
+use App\Site\Model\Page;
+use App\Site\Model\SiteConfig;
 
 final class Repository {
     private array $internalFilesMap = [

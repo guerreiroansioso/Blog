@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Parsing;
 
-final class HeadingLineStrategy implements LineParseStrategy {
+final class HeadingLineParser implements LineParser {
     public function supports(string $line): bool {
         return $line !== '' && $line[0] === '#';
     }

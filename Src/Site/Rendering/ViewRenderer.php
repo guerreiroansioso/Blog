@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Rendering;
 
 final class ViewRenderer {
     public function __construct(private string $viewsDirectory) {}

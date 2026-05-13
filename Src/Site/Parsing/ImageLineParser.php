@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Parsing;
 
-final class ImageLineStrategy implements LineParseStrategy {
+final class ImageLineParser implements LineParser {
     public function supports(string $line): bool {
         return preg_match('/^!\[(.*?)\]\((.+)\)$/', $line) === 1;
     }

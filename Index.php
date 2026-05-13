@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Site\App;
-use App\Site\Parser;
-use App\Site\Repository;
-use App\Site\ViewRenderer;
+use App\Site\Content\Repository;
+use App\Site\Core\App;
+use App\Site\Parsing\Parser;
+use App\Site\Rendering\ViewRenderer;
 
 require_once __DIR__ . '/Src/Bootstrap/Autoloader.php';
 

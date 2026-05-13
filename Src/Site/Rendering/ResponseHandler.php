@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Rendering;
+
+use App\Site\Content\Repository;
+use App\Site\Parsing\Parser;
 
 final class ResponseHandler {
     public function __construct(

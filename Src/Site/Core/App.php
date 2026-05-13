@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Site;
+namespace App\Site\Core;
+
+use App\Site\Content\Repository;
+use App\Site\Parsing\Parser;
+use App\Site\Rendering\ResponseHandler;
+use App\Site\Rendering\ViewRenderer;
+use App\Site\Routing\RouteHandlerFactory;
 
 final class App {
     private ResponseHandler $responseHandler;
