@@ -13,15 +13,15 @@ $view = $homeRender['buildViewData'](
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= $view['safePageTitle'] ?></title>
+  <title><?= $view['pageTitle'] ?></title>
   <link rel="icon" href="<?= $view['faviconDataUri'] ?>">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="container">
     <section class="hero">
-      <h1><?= $view['safeDisplayName'] ?></h1>
-      <p><?= $view['safeDescription'] ?></p>
+      <h1><?= $view['displayName'] ?></h1>
+      <p><?= $view['description'] ?></p>
       <nav class="heroNav">
         <?= $view['menuHtml'] ?>
       </nav>
