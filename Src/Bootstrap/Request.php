@@ -13,7 +13,10 @@ function normalizeRequest(array|string $value): array|string {
 function parseRequest(): array {
     $requestUri = normalizeRequest($_SERVER['REQUEST_URI'] ?? '/');
     $slug = isset($_GET['slug']) ? normalizeRequest($_GET['slug']) : '';
-    $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+
+    $pageRaw = $_GET['page'] ?? 1;
+    $pageNumber = filter_var($pageRaw, FILTER_VALIDATE_INT);
+    if ($pageNumber === false) { $pageNumber = 1; }
 
     return [$requestUri, $slug, $pageNumber];
 }
