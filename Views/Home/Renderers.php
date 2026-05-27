@@ -109,9 +109,6 @@ return [
             . "%26%23128214;%3C/text%3E%3C/svg%3E";
         $logoFile = __DIR__ . '/../../Public/Logo.png';
         $hasLogoPng = is_file($logoFile);
-        if ($siteConfig->useLogoAsFavicon() && $hasLogoPng) {
-            $faviconDataUri = '/Logo.png';
-        }
         $logoHtml = '';
         if ($siteConfig->showLogo()) {
             $logoHtml = $hasLogoPng
@@ -183,9 +180,7 @@ return [
             'description' => $safeText($siteConfig->description()),
             'themeCssVars' => homeThemeVars($siteConfig->blogColors()),
             'faviconDataUri' => $faviconDataUri,
-            'faviconType' => $siteConfig->useLogoAsFavicon() && $hasLogoPng
-                ? 'image/png'
-                : 'image/svg+xml',
+            'faviconType' => 'image/svg+xml',
             'logoHtml' => $logoHtml,
             'menuHtml' => $menuHtml,
             'itemsHtml' => $itemsHtml,

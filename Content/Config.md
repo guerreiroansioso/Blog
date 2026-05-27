@@ -3,7 +3,6 @@
 - description: Esse é meu portifólio pessoal.
 - hidePageList: yes
 - showLogo: yes
-- useLogoAsFavicon: no
 - blogColors:
   - bg: #f4f7fb
   - card: #ffffff

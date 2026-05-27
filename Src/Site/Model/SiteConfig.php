@@ -11,7 +11,6 @@ final class SiteConfig {
         private string $description,
         private bool $hidePageList,
         private bool $showLogo,
-        private bool $useLogoAsFavicon,
         private array $blogColors = []
     ) {}
 
@@ -20,6 +19,5 @@ final class SiteConfig {
     public function description(): string { return $this->description; }
     public function hidePageList(): bool { return $this->hidePageList; }
     public function showLogo(): bool { return $this->showLogo; }
-    public function useLogoAsFavicon(): bool { return $this->useLogoAsFavicon; }
     public function blogColors(): array { return $this->blogColors; }
 }

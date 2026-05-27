@@ -100,7 +100,6 @@ final class Repository {
             'description' => 'Escolha um conteúdo para abrir.',
             'hidePageList' => 'no',
             'showLogo' => 'no',
-            'useLogoAsFavicon' => 'no',
             'blogColors' => '',
         ];
         $configFile = rtrim($this->contentDirectory, '/') . '/Config.md';
@@ -112,7 +111,6 @@ final class Repository {
                 $defaults['description'],
                 $this->toBool($defaults['hidePageList']),
                 $this->toBool($defaults['showLogo']),
-                $this->toBool($defaults['useLogoAsFavicon']),
                 $this->parseBlogColors($defaults['blogColors'])
             );
         }
@@ -125,7 +123,7 @@ final class Repository {
             $matches = [];
             $isMatch = preg_match(
                 '/^\s*-\s*(siteName|displayName|description|hidePageList|'
-                . 'showLogo|useLogoAsFavicon|blogColors)\s*:\s*(.*)$/',
+                . 'showLogo|blogColors)\s*:\s*(.*)$/',
                 $line,
                 $matches
             ) === 1;
@@ -166,7 +164,6 @@ final class Repository {
             $config['description'],
             $this->toBool($config['hidePageList']),
             $this->toBool($config['showLogo']),
-            $this->toBool($config['useLogoAsFavicon']),
             $this->parseBlogColors($config['blogColors'])
         );
     }
