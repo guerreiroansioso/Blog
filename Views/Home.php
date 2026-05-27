@@ -16,6 +16,9 @@ $view = $homeRender['buildViewData'](
   <title><?= $view['pageTitle'] ?></title>
   <link rel="icon" href="<?= $view['faviconDataUri'] ?>">
   <link rel="stylesheet" href="/styles.css">
+  <?php if (($view['themeCssVars'] ?? '') !== ''): ?>
+  <style><?= $view['themeCssVars'] ?></style>
+  <?php endif; ?>
 </head>
 <body>
   <main class="container">

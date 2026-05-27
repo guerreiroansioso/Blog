@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+function pageThemeVars(array $colors): string {
+    if ($colors === []) { return ''; }
+
+    $declarations = '';
+    foreach ($colors as $cssVar => $hex) {
+        $declarations .= $cssVar . ': ' . $hex . ';';
+    }
+
+    return ':root{' . $declarations . '}';
+}
+
 return [
     'buildViewData' => static function (
         string $pageTitle,
@@ -93,6 +104,7 @@ return [
             'pageTitle' => $safeText($pageTitle),
             'displayName' => $safeText($siteConfig->displayName()),
             'description' => $safeText($siteConfig->description()),
+            'themeCssVars' => pageThemeVars($siteConfig->blogColors()),
             'faviconDataUri' => $faviconDataUri,
             'menuHtml' => $menuHtml,
             'contentHtml' => $contentHtml,

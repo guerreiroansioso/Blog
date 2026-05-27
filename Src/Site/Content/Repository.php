@@ -99,15 +99,18 @@ final class Repository {
             'displayName' => 'Lista de Páginas',
             'description' => 'Escolha um conteúdo para abrir.',
             'hidePageList' => 'no',
+            'blogColors' => '',
         ];
         $configKeys = [
             'sitename' => 'siteName',
             'displayname' => 'displayName',
             'description' => 'description',
             'hidepagelist' => 'hidePageList',
+            'blogcolors' => 'blogColors',
             'site_name' => 'siteName',
             'display_name' => 'displayName',
             'hide_page_list' => 'hidePageList',
+            'blog_colors' => 'blogColors',
         ];
 
         $configFile = rtrim($this->contentDirectory, '/') . '/Config.md';
@@ -117,19 +120,22 @@ final class Repository {
                 $defaults['siteName'],
                 $defaults['displayName'],
                 $defaults['description'],
-                $this->toBool($defaults['hidePageList'])
+                $this->toBool($defaults['hidePageList']),
+                $this->parseBlogColors($defaults['blogColors'])
             );
         }
 
         $lines = preg_split('/\R/', $content) ?: [];
         $config = $defaults;
 
-        foreach ($lines as $line) {
+        for ($index = 0; $index < count($lines); $index++) {
+            $line = $lines[$index];
             $matches = [];
             $isMatch = preg_match(
-                '/^-\s*(siteName|displayName|description|hidePageList|'
-                . 'site_name|display_name|hide_page_list)\s*:\s*(.+)$/i',
-                trim($line),
+                '/^\s*-\s*(siteName|displayName|description|hidePageList|'
+                . 'blogColors|site_name|display_name|hide_page_list|'
+                . 'blog_colors)\s*:\s*(.*)$/i',
+                $line,
                 $matches
             ) === 1;
             if (!$isMatch) { continue; }
@@ -137,6 +143,28 @@ final class Repository {
             $key = $configKeys[normalizeRequest(trim($matches[1]))]
                 ?? trim($matches[1]);
             $value = trim($matches[2]);
+
+            if ($key === 'blogColors' && $value === '') {
+                $pairs = [];
+                $nextIndex = $index + 1;
+
+                while ($nextIndex < count($lines)) {
+                    $subMatches = [];
+                    $isSubItem = preg_match(
+                        '/^\s{2,}-\s*([a-zA-Z_]+)\s*:\s*(.+)\s*$/',
+                        $lines[$nextIndex],
+                        $subMatches
+                    ) === 1;
+                    if (!$isSubItem) { break; }
+
+                    $pairs[] = trim($subMatches[1]) . '=' . trim($subMatches[2]);
+                    $nextIndex++;
+                }
+
+                $value = implode(', ', $pairs);
+                $index = $nextIndex - 1;
+            }
+
             if ($value === '') { continue; }
 
             $config[$key] = $value;
@@ -146,7 +174,8 @@ final class Repository {
             $config['siteName'],
             $config['displayName'],
             $config['description'],
-            $this->toBool($config['hidePageList'])
+            $this->toBool($config['hidePageList']),
+            $this->parseBlogColors($config['blogColors'])
         );
     }
 
@@ -200,5 +229,37 @@ final class Repository {
         $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
 
         return $path . $query . $fragment;
+    }
+
+    private function parseBlogColors(string $value): array {
+        $raw = trim($value);
+        if ($raw === '') { return []; }
+
+        $map = [
+            'bg' => '--bg',
+            'card' => '--card',
+            'text' => '--text',
+            'muted' => '--muted',
+            'primary' => '--primary',
+            'primarystrong' => '--primary-strong',
+            'border' => '--border',
+        ];
+        $colors = [];
+        $pairs = preg_split('/\s*[|,]\s*/', $raw) ?: [];
+
+        foreach ($pairs as $pair) {
+            if ($pair === '' || !str_contains($pair, '=')) { continue; }
+
+            [$name, $hex] = array_map('trim', explode('=', $pair, 2));
+            $normalizedName = normalizeRequest($name);
+            $cssVar = $map[$normalizedName] ?? null;
+            if ($cssVar === null) { continue; }
+
+            if (preg_match('/^#[0-9a-fA-F]{6}$/', $hex) !== 1) { continue; }
+
+            $colors[$cssVar] = strtolower($hex);
+        }
+
+        return $colors;
     }
 }

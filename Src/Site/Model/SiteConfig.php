@@ -9,11 +9,13 @@ final class SiteConfig {
         private string $siteName,
         private string $displayName,
         private string $description,
-        private bool $hidePageList
+        private bool $hidePageList,
+        private array $blogColors = []
     ) {}
 
     public function siteName(): string { return $this->siteName; }
     public function displayName(): string { return $this->displayName; }
     public function description(): string { return $this->description; }
     public function hidePageList(): bool { return $this->hidePageList; }
+    public function blogColors(): array { return $this->blogColors; }
 }

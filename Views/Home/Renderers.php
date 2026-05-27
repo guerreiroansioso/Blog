@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+function homeThemeVars(array $colors): string {
+    if ($colors === []) { return ''; }
+
+    $declarations = '';
+    foreach ($colors as $cssVar => $hex) {
+        $declarations .= $cssVar . ': ' . $hex . ';';
+    }
+
+    return ':root{' . $declarations . '}';
+}
+
 return [
     'safeText' => static function (string $text): string {
         return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
@@ -154,6 +165,7 @@ return [
             'pageTitle' => $safeText($pageTitle),
             'displayName' => $safeText($siteConfig->displayName()),
             'description' => $safeText($siteConfig->description()),
+            'themeCssVars' => homeThemeVars($siteConfig->blogColors()),
             'faviconDataUri' => $faviconDataUri,
             'menuHtml' => $menuHtml,
             'itemsHtml' => $itemsHtml,

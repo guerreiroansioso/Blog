@@ -1,4 +1,12 @@
-- siteName: Blog do Felipão
-- displayName: Blog do Felipão
-- description: Um projeto de blog.
+- siteName: Felipe Augusto Cruz
+- displayName: Felipe Augusto Cruz
+- description: Esse é meu portifólio pessoal.
 - hidePageList: yes
+- blogColors:
+  - bg: #f4f7fb
+  - card: #ffffff
+  - text: #1f2937
+  - muted: #6b7280
+  - primary: #0f766e
+  - primaryStrong: #115e59
+  - border: #e5e7eb
