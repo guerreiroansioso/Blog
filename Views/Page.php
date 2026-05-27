@@ -5,6 +5,7 @@ $view = $pageRender['buildViewData'](
     $siteConfig,
     $menuItems,
     $contentHtml,
+    $authorName,
     $sidebarHtml,
     $sidebarItems,
     $pagination,
@@ -41,6 +42,7 @@ $view = $pageRender['buildViewData'](
 
     <div class="<?= $view['pageLayoutClass'] ?>">
       <article class="card">
+        <?= $view['authorHtml'] ?>
         <main><?= $view['contentHtml'] ?></main>
         <?= $view['paginationHtml'] ?>
       </article>

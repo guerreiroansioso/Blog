@@ -2,6 +2,9 @@
 
 Este post mostra como usar listas simples, numericas e sublistas.
 
+# Author
+Felipe Augusto Cruz
+
 ## Lista simples
 
 - Item A

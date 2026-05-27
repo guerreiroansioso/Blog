@@ -42,6 +42,7 @@ final class ResponseHandler {
         echo $this->viewRenderer->render('Page', [
             'pageTitle' => $siteConfig->siteName(),
             'contentHtml' => $content['main'],
+            'authorName' => $content['author'],
             'sidebarHtml' => $content['sidebar'],
             'sidebarItems' => $content['sidebars'],
             'pagination' => $content['pagination'],
@@ -71,6 +72,7 @@ final class ResponseHandler {
         echo $this->viewRenderer->render('Page', [
             'pageTitle' => $page->title() . ' | ' . $siteConfig->siteName(),
             'contentHtml' => $content['main'],
+            'authorName' => $content['author'],
             'sidebarHtml' => $content['sidebar'],
             'sidebarItems' => $content['sidebars'],
             'pagination' => $content['pagination'],
@@ -107,11 +109,15 @@ final class ResponseHandler {
         int $pageNumber,
         string $baseUrl
     ): array {
-        $sections = preg_split('/^\s*#\s+Sidebar\s*$/mi', $body);
+        ['body' => $bodyWithoutAuthor, 'author' => $authorName]
+            = $this->extractAuthorSection($body);
+
+        $sections = preg_split('/^\s*#\s+Sidebar\s*$/mi', $bodyWithoutAuthor);
         if ($sections === false || count($sections) < 2) {
-            $pages = $this->paginateBody($body, $pageNumber, $baseUrl);
+            $pages = $this->paginateBody($bodyWithoutAuthor, $pageNumber, $baseUrl);
             return [
                 'main' => $this->parser->parse($pages['body']),
+                'author' => $authorName,
                 'sidebar' => '',
                 'sidebars' => [],
                 'pagination' => $pages['pagination'],
@@ -129,9 +135,41 @@ final class ResponseHandler {
         $pages = $this->paginateBody($sections[0], $pageNumber, $baseUrl);
         return [
             'main' => $this->parser->parse($pages['body']),
+            'author' => $authorName,
             'sidebar' => implode("\n", $sidebars),
             'sidebars' => $sidebars,
             'pagination' => $pages['pagination'],
+        ];
+    }
+
+    private function extractAuthorSection(string $body): array {
+        $matches = [];
+        $hasAuthorSection = preg_match(
+            '/^\s*#\s+Author\s*$\R([\s\S]*?)(?=^\s*#{1,6}\s+|\z)/mi',
+            $body,
+            $matches
+        ) === 1;
+        if (!$hasAuthorSection) {
+            return ['body' => $body, 'author' => ''];
+        }
+
+        $author = trim((string) ($matches[1] ?? ''));
+        $author = preg_replace('/\R+/', ' ', $author) ?? '';
+        $author = trim($author);
+
+        $bodyWithoutAuthor = preg_replace(
+            '/^\s*#\s+Author\s*$\R([\s\S]*?)(?=^\s*#{1,6}\s+|\z)/mi',
+            '',
+            $body,
+            1
+        );
+        if ($bodyWithoutAuthor === null) {
+            $bodyWithoutAuthor = $body;
+        }
+
+        return [
+            'body' => trim($bodyWithoutAuthor),
+            'author' => $author,
         ];
     }
 

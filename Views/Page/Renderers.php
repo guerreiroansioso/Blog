@@ -19,6 +19,7 @@ return [
         object $siteConfig,
         array $menuItems,
         string $contentHtml,
+        string $authorName,
         string $sidebarHtml,
         array $sidebarItems,
         array $pagination,
@@ -100,6 +101,14 @@ return [
             $footerHtml = ob_get_clean();
         }
 
+        $authorHtml = '';
+        if (trim($authorName) !== '') {
+            $authorHtml = '<section class="authorBlock">'
+                . '<span class="authorLabel">Author</span>'
+                . '<p class="authorName">' . $safeText($authorName) . '</p>'
+                . '</section>';
+        }
+
         return [
             'pageTitle' => $safeText($pageTitle),
             'displayName' => $safeText($siteConfig->displayName()),
@@ -108,6 +117,7 @@ return [
             'faviconDataUri' => $faviconDataUri,
             'menuHtml' => $menuHtml,
             'contentHtml' => $contentHtml,
+            'authorHtml' => $authorHtml,
             'pageLayoutClass' => $sidebarHtml !== ''
                 ? 'pageLayout hasSidebar'
                 : 'pageLayout',
