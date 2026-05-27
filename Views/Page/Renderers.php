@@ -104,7 +104,7 @@ return [
         $authorHtml = '';
         if (trim($authorName) !== '') {
             $authorHtml = '<section class="authorBlock">'
-                . '<span class="authorLabel">Author</span>'
+                . '<span class="authorLabel">Autor</span>'
                 . '<p class="authorName">' . $safeText($authorName) . '</p>'
                 . '</section>';
         }
