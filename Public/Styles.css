@@ -192,9 +192,9 @@ body {
 }
 
 .authorBlock {
-  display: block;
+  float: right;
   width: fit-content;
-  margin: 0 0 18px auto;
+  margin: 0 0 14px 18px;
   padding: 8px 12px 10px;
   border-left: 4px solid var(--primary);
   border-radius: 8px;
@@ -329,6 +329,10 @@ main img {
 @media (max-width: 640px) {
   .card { padding: 20px; }
   .pageLayout.hasSidebar { grid-template-columns: 1fr; }
+  .authorBlock {
+    float: none;
+    margin: 0 0 10px;
+  }
   .footer {
     grid-template-columns: 1fr;
     margin-inline: 20px;

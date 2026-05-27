@@ -4,6 +4,9 @@ A inteligência artificial é um campo da computação voltado à criação de s
 
 De forma geral, a inteligência artificial pode ser compreendida como a capacidade de um sistema computacional de operar com certo grau de autonomia diante de informações disponíveis. Essa autonomia não significa consciência, vontade própria ou pensamento humano no sentido emocional e subjetivo. Significa que o sistema é estruturado para processar dados e selecionar caminhos de ação com base em regras, modelos, probabilidades e critérios definidos durante sua construção ou treinamento.
 
+# Author
+Felipe Augusto Cruz
+
 ## Conceito de inteligência artificial
 
 O conceito de inteligência artificial está diretamente ligado à ideia de representação do conhecimento. Para que um sistema artificial execute uma tarefa considerada inteligente, ele precisa transformar informações em estruturas que possam ser analisadas. Essas estruturas permitem que o sistema compare elementos, calcule possibilidades, reconheça regularidades e produza resultados coerentes com o objetivo para o qual foi desenvolvido.
