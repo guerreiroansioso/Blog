@@ -107,6 +107,22 @@ return [
             . "%3Csvg xmlns='http://www.w3.org/2000/svg'"
             . " viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E"
             . "%26%23128214;%3C/text%3E%3C/svg%3E";
+        $logoFile = __DIR__ . '/../../Public/Logo.png';
+        $hasLogoPng = is_file($logoFile);
+        if ($siteConfig->useLogoAsFavicon() && $hasLogoPng) {
+            $faviconDataUri = '/Logo.png';
+        }
+        $logoHtml = '';
+        if ($siteConfig->showLogo()) {
+            $logoHtml = $hasLogoPng
+                ? '<img class="siteLogo" src="/Logo.png" alt="Logo" />'
+                : '<svg class="siteLogo siteLogoSvg" viewBox="0 0 100 100" '
+                    . 'xmlns="http://www.w3.org/2000/svg" '
+                    . 'role="img" aria-label="Logo">'
+                    . '<text x="50" y="72" text-anchor="middle" '
+                    . 'font-size="72">&#128214;</text>'
+                    . '</svg>';
+        }
 
         ob_start();
         foreach ($menuItems as $menuItem) {
@@ -167,6 +183,10 @@ return [
             'description' => $safeText($siteConfig->description()),
             'themeCssVars' => homeThemeVars($siteConfig->blogColors()),
             'faviconDataUri' => $faviconDataUri,
+            'faviconType' => $siteConfig->useLogoAsFavicon() && $hasLogoPng
+                ? 'image/png'
+                : 'image/svg+xml',
+            'logoHtml' => $logoHtml,
             'menuHtml' => $menuHtml,
             'itemsHtml' => $itemsHtml,
             'footerHtml' => $footerHtml,

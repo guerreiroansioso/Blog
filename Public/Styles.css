@@ -41,14 +41,47 @@ body {
   color: #fff;
 }
 
+.heroHead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.heroText {
+  min-width: 0;
+}
+
 .hero h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2.2rem); }
 .hero p { margin: 10px 0 0; color: #ecfeff; opacity: 1; }
+.siteLogo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 0;
+  object-fit: contain;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px;
+}
+
+.siteLogoSvg {
+  fill: currentColor;
+  color: #ffffff;
+}
 
 .heroNav {
   margin-top: 16px;
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .heroHead {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 .heroNav a {

@@ -99,20 +99,10 @@ final class Repository {
             'displayName' => 'Lista de Páginas',
             'description' => 'Escolha um conteúdo para abrir.',
             'hidePageList' => 'no',
+            'showLogo' => 'no',
+            'useLogoAsFavicon' => 'no',
             'blogColors' => '',
         ];
-        $configKeys = [
-            'sitename' => 'siteName',
-            'displayname' => 'displayName',
-            'description' => 'description',
-            'hidepagelist' => 'hidePageList',
-            'blogcolors' => 'blogColors',
-            'site_name' => 'siteName',
-            'display_name' => 'displayName',
-            'hide_page_list' => 'hidePageList',
-            'blog_colors' => 'blogColors',
-        ];
-
         $configFile = rtrim($this->contentDirectory, '/') . '/Config.md';
         $content = file_get_contents($configFile);
         if ($content === false) {
@@ -121,6 +111,8 @@ final class Repository {
                 $defaults['displayName'],
                 $defaults['description'],
                 $this->toBool($defaults['hidePageList']),
+                $this->toBool($defaults['showLogo']),
+                $this->toBool($defaults['useLogoAsFavicon']),
                 $this->parseBlogColors($defaults['blogColors'])
             );
         }
@@ -133,15 +125,13 @@ final class Repository {
             $matches = [];
             $isMatch = preg_match(
                 '/^\s*-\s*(siteName|displayName|description|hidePageList|'
-                . 'blogColors|site_name|display_name|hide_page_list|'
-                . 'blog_colors)\s*:\s*(.*)$/i',
+                . 'showLogo|useLogoAsFavicon|blogColors)\s*:\s*(.*)$/',
                 $line,
                 $matches
             ) === 1;
             if (!$isMatch) { continue; }
 
-            $key = $configKeys[normalizeRequest(trim($matches[1]))]
-                ?? trim($matches[1]);
+            $key = trim($matches[1]);
             $value = trim($matches[2]);
 
             if ($key === 'blogColors' && $value === '') {
@@ -175,6 +165,8 @@ final class Repository {
             $config['displayName'],
             $config['description'],
             $this->toBool($config['hidePageList']),
+            $this->toBool($config['showLogo']),
+            $this->toBool($config['useLogoAsFavicon']),
             $this->parseBlogColors($config['blogColors'])
         );
     }

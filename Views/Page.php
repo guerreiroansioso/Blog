@@ -19,7 +19,7 @@ $view = $pageRender['buildViewData'](
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= $view['pageTitle'] ?></title>
-  <link rel="icon" href="<?= $view['faviconDataUri'] ?>">
+  <link rel="icon" type="<?= $view['faviconType'] ?>" href="<?= $view['faviconDataUri'] ?>" sizes="any">
   <link rel="stylesheet" href="/styles.css">
   <?php if (($view['themeCssVars'] ?? '') !== ''): ?>
   <style><?= $view['themeCssVars'] ?></style>
@@ -28,8 +28,13 @@ $view = $pageRender['buildViewData'](
 <body>
   <div class="wrap">
     <section class="hero pageHero">
-      <h1><?= $view['displayName'] ?></h1>
-      <p><?= $view['description'] ?></p>
+      <div class="heroHead">
+        <?= $view['logoHtml'] ?>
+        <div class="heroText">
+          <h1><?= $view['displayName'] ?></h1>
+          <p><?= $view['description'] ?></p>
+        </div>
+      </div>
       <nav class="heroNav">
         <?= $view['menuHtml'] ?>
       </nav>
