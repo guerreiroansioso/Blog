@@ -14,82 +14,6 @@ function homeThemeVars(array $colors): string {
 }
 
 return [
-    'safeText' => static function (string $text): string {
-        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-    },
-    'faviconDataUri' => static function (): string {
-        return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'"
-            . " viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E"
-            . "%26%23128214;%3C/text%3E%3C/svg%3E";
-    },
-    'menu' => static function (array $menuItems): string {
-        ob_start();
-        foreach ($menuItems as $menuItem) {
-            $href = htmlspecialchars($menuItem->href(), ENT_QUOTES, 'UTF-8');
-            $label = htmlspecialchars($menuItem->label(), ENT_QUOTES, 'UTF-8');
-            ?>
-            <a href="<?= $href ?>">
-              <?= $label ?>
-            </a>
-            <?php
-        }
-
-        $output = ob_get_clean();
-
-        return $output;
-    },
-    'items' => static function (array $items): string {
-        ob_start();
-        foreach ($items as $item) {
-            $href = '/page?slug=' . urlencode(normalizeRequest($item->slug()));
-            $title = htmlspecialchars($item->title(), ENT_QUOTES, 'UTF-8');
-            ?>
-            <li>
-              <a href="<?= $href ?>">
-                <?= $title ?>
-              </a>
-            </li>
-            <?php
-        }
-
-        $output = ob_get_clean();
-
-        return $output;
-    },
-    'footer' => static function (array $footerSections): string {
-        if ($footerSections === []) {
-            return '';
-        }
-
-        ob_start();
-        ?>
-        <footer class="footer">
-        <?php
-        foreach ($footerSections as $footerSection) {
-            $safeTitle = '';
-            $titleHtml = '';
-            if ($footerSection['title'] !== '') {
-                $safeTitle = htmlspecialchars(
-                    $footerSection['title'],
-                    ENT_QUOTES,
-                    'UTF-8'
-                );
-                $titleHtml = "<h2>{$safeTitle}</h2>\n";
-            }
-            ?>
-          <section class="footerSection">
-            <?= $titleHtml ?>
-            <?= $footerSection['content'] . "\n" ?>
-          </section>
-            <?php
-        }
-        ?>
-        </footer>
-        <?php
-        $output = ob_get_clean();
-
-        return $output;
-    },
     'buildViewData' => static function (
         string $pageTitle,
         object $siteConfig,
@@ -111,14 +35,22 @@ return [
         $hasLogoPng = is_file($logoFile);
         $logoHtml = '';
         if ($siteConfig->showLogo()) {
-            $logoHtml = $hasLogoPng
-                ? '<img class="siteLogo" src="/Logo.png" alt="Logo" />'
-                : '<svg class="siteLogo siteLogoSvg" viewBox="0 0 100 100" '
-                    . 'xmlns="http://www.w3.org/2000/svg" '
-                    . 'role="img" aria-label="Logo">'
-                    . '<text x="50" y="72" text-anchor="middle" '
-                    . 'font-size="72">&#128214;</text>'
-                    . '</svg>';
+            ob_start();
+            if ($hasLogoPng) {
+                ?>
+                <img class="siteLogo" src="/Logo.png" alt="Logo" />
+                <?php
+            } else {
+                ?>
+                <svg class="siteLogo siteLogoSvg" viewBox="0 0 100 100"
+                     xmlns="http://www.w3.org/2000/svg"
+                     role="img" aria-label="Logo">
+                  <text x="50" y="72" text-anchor="middle"
+                        font-size="72">&#128214;</text>
+                </svg>
+                <?php
+            }
+            $logoHtml = ob_get_clean();
         }
 
         ob_start();
@@ -131,7 +63,6 @@ return [
             </a>
             <?php
         }
-
         $menuHtml = ob_get_clean();
 
         ob_start();
@@ -146,7 +77,6 @@ return [
             </li>
             <?php
         }
-
         $itemsHtml = ob_get_clean();
 
         $footerHtml = '';
@@ -161,11 +91,12 @@ return [
                     $title = $safeText($footerSection['title']);
                     $titleHtml = "<h2>{$title}</h2>\n";
                 }
+                $footerContent = ($footerSection['content'] ?? '') . "\n";
                 ?>
-              <section class="footerSection">
-                <?= $titleHtml ?>
-                <?= $footerSection['content'] . "\n" ?>
-              </section>
+                <section class="footerSection">
+                  <?= $titleHtml ?>
+                  <?= $footerContent ?>
+                </section>
                 <?php
             }
             ?>
@@ -174,11 +105,22 @@ return [
             $footerHtml = ob_get_clean();
         }
 
+        $themeCssVars = homeThemeVars($siteConfig->blogColors());
+        $themeStyleTag = '';
+        if ($themeCssVars !== '') {
+            ob_start();
+            ?>
+            <style><?= $themeCssVars ?></style>
+            <?php
+            $themeStyleTag = ob_get_clean();
+        }
+
         return [
             'pageTitle' => $safeText($pageTitle),
             'displayName' => $safeText($siteConfig->displayName()),
             'description' => $safeText($siteConfig->description()),
-            'themeCssVars' => homeThemeVars($siteConfig->blogColors()),
+            'themeCssVars' => $themeCssVars,
+            'themeStyleTag' => $themeStyleTag,
             'faviconDataUri' => $faviconDataUri,
             'faviconType' => 'image/svg+xml',
             'logoHtml' => $logoHtml,

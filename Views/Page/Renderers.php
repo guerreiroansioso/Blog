@@ -40,14 +40,22 @@ return [
         $hasLogoPng = is_file($logoFile);
         $logoHtml = '';
         if ($siteConfig->showLogo()) {
-            $logoHtml = $hasLogoPng
-                ? '<img class="siteLogo" src="/Logo.png" alt="Logo" />'
-                : '<svg class="siteLogo siteLogoSvg" viewBox="0 0 100 100" '
-                    . 'xmlns="http://www.w3.org/2000/svg" '
-                    . 'role="img" aria-label="Logo">'
-                    . '<text x="50" y="72" text-anchor="middle" '
-                    . 'font-size="72">&#128214;</text>'
-                    . '</svg>';
+            ob_start();
+            if ($hasLogoPng) {
+                ?>
+                <img class="siteLogo" src="/Logo.png" alt="Logo" />
+                <?php
+            } else {
+                ?>
+                <svg class="siteLogo siteLogoSvg" viewBox="0 0 100 100"
+                     xmlns="http://www.w3.org/2000/svg"
+                     role="img" aria-label="Logo">
+                  <text x="50" y="72" text-anchor="middle"
+                        font-size="72">&#128214;</text>
+                </svg>
+                <?php
+            }
+            $logoHtml = ob_get_clean();
         }
 
         ob_start();
@@ -62,53 +70,78 @@ return [
         }
         $menuHtml = ob_get_clean();
 
-        ob_start();
+        $paginationHtml = '';
         if (($pagination['links'] ?? []) !== []) {
+            ob_start();
             ?>
             <nav class="pagination" aria-label="Paginação">
-            <?php foreach ($pagination['links'] as $paginationLink): ?>
-                <?php if ($paginationLink['isCurrent']): ?>
-                <span aria-current="page">
-                  <?= $safeText((string) $paginationLink['label']) ?>
-                </span>
-                <?php else: ?>
-                <a href="<?= $safeText((string) $paginationLink['href']) ?>">
-                  <?= $safeText((string) $paginationLink['label']) ?>
-                </a>
-                <?php endif; ?>
-            <?php endforeach; ?>
+            <?php
+            foreach ($pagination['links'] as $paginationLink) {
+                $labelValue = $paginationLink['label'] ?? '';
+                $label = is_string($labelValue) ? $safeText($labelValue) : '';
+                if ($paginationLink['isCurrent']) {
+                    ?>
+                    <span aria-current="page">
+                      <?= $label ?>
+                    </span>
+                    <?php
+                } else {
+                    $hrefValue = $paginationLink['href'] ?? '';
+                    $href = is_string($hrefValue) ? $safeText($hrefValue) : '';
+                    ?>
+                    <a href="<?= $href ?>">
+                      <?= $label ?>
+                    </a>
+                    <?php
+                }
+            }
+            ?>
             </nav>
             <?php
+            $paginationHtml = ob_get_clean();
         }
-        $paginationHtml = ob_get_clean();
 
-        ob_start();
+        $sidebarsHtml = '';
         if ($sidebarHtml !== '') {
+            ob_start();
             ?>
             <div class="sidebarStack">
-            <?php foreach ($sidebarItems as $sidebarItem): ?>
-              <aside class="sidebar">
-                <?= $sidebarItem ?>
-              </aside>
-            <?php endforeach; ?>
+            <?php
+            foreach ($sidebarItems as $sidebarItem) {
+                ?>
+                <aside class="sidebar">
+                  <?= $sidebarItem ?>
+                </aside>
+                <?php
+            }
+            ?>
             </div>
             <?php
+            $sidebarsHtml = ob_get_clean();
         }
-        $sidebarsHtml = ob_get_clean();
 
         $footerHtml = '';
         if ($footerSections !== []) {
             ob_start();
             ?>
             <footer class="footer">
-            <?php foreach ($footerSections as $footerSection): ?>
-              <section class="footerSection">
-                <?php if (($footerSection['title'] ?? '') !== ''): ?>
-                  <h2><?= $safeText((string) $footerSection['title']) ?></h2>
-                <?php endif; ?>
-                <?= ($footerSection['content'] ?? '') . "\n" ?>
-              </section>
-            <?php endforeach; ?>
+            <?php
+            foreach ($footerSections as $footerSection) {
+                $titleHtml = '';
+                if (($footerSection['title'] ?? '') !== '') {
+                    $titleValue = $footerSection['title'] ?? '';
+                    $title = is_string($titleValue) ? $safeText($titleValue) : '';
+                    $titleHtml = "<h2>{$title}</h2>\n";
+                }
+                $footerContent = ($footerSection['content'] ?? '') . "\n";
+                ?>
+                <section class="footerSection">
+                  <?= $titleHtml ?>
+                  <?= $footerContent ?>
+                </section>
+                <?php
+            }
+            ?>
             </footer>
             <?php
             $footerHtml = ob_get_clean();
@@ -116,17 +149,37 @@ return [
 
         $authorHtml = '';
         if (trim($authorName) !== '') {
-            $authorHtml = '<section class="authorBlock">'
-                . '<span class="authorLabel">Autor</span>'
-                . '<p class="authorName">' . $safeText($authorName) . '</p>'
-                . '</section>';
+            ob_start();
+            $safeAuthorName = $safeText($authorName);
+            ?>
+            <section class="authorBlock">
+              <span class="authorLabel">Autor</span>
+              <p class="authorName"><?= $safeAuthorName ?></p>
+            </section>
+            <?php
+            $authorHtml = ob_get_clean();
+        }
+
+        $themeCssVars = pageThemeVars($siteConfig->blogColors());
+        $backLinkHtml = '';
+        if ($showBackLink) {
+            ob_start();
+            ?>
+            <div class="topbar">
+              <a class="back" href="/">← Voltar para o início</a>
+            </div>
+            <?php
+            $backLinkHtml = ob_get_clean();
         }
 
         return [
             'pageTitle' => $safeText($pageTitle),
             'displayName' => $safeText($siteConfig->displayName()),
             'description' => $safeText($siteConfig->description()),
-            'themeCssVars' => pageThemeVars($siteConfig->blogColors()),
+            'themeCssVars' => $themeCssVars,
+            'themeStyleTag' => $themeCssVars !== ''
+                ? '<style>' . $themeCssVars . '</style>'
+                : '',
             'faviconDataUri' => $faviconDataUri,
             'faviconType' => 'image/svg+xml',
             'logoHtml' => $logoHtml,
@@ -140,6 +193,7 @@ return [
             'sidebarsHtml' => $sidebarsHtml,
             'footerHtml' => $footerHtml,
             'showBackLink' => $showBackLink,
+            'backLinkHtml' => $backLinkHtml,
         ];
     },
 ];

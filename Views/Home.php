@@ -17,9 +17,7 @@ $view = $homeRender['buildViewData'](
   <link rel="icon" type="<?= $view['faviconType'] ?>" href="<?= $view['faviconDataUri'] ?>" sizes="any">
   <link rel="shortcut icon" type="<?= $view['faviconType'] ?>" href="<?= $view['faviconDataUri'] ?>">
   <link rel="stylesheet" href="/styles.css">
-  <?php if (($view['themeCssVars'] ?? '') !== ''): ?>
-  <style><?= $view['themeCssVars'] ?></style>
-  <?php endif; ?>
+  <?= $view['themeStyleTag'] ?>
 </head>
 <body>
   <main class="container">

@@ -153,7 +153,8 @@ final class ResponseHandler {
             return ['body' => $body, 'author' => ''];
         }
 
-        $author = trim((string) ($matches[1] ?? ''));
+        $authorMatch = $matches[1] ?? '';
+        $author = is_string($authorMatch) ? trim($authorMatch) : '';
         $author = preg_replace('/\R+/', ' ', $author) ?? '';
         $author = trim($author);
 

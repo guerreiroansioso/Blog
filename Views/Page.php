@@ -21,9 +21,7 @@ $view = $pageRender['buildViewData'](
   <title><?= $view['pageTitle'] ?></title>
   <link rel="icon" type="<?= $view['faviconType'] ?>" href="<?= $view['faviconDataUri'] ?>" sizes="any">
   <link rel="stylesheet" href="/styles.css">
-  <?php if (($view['themeCssVars'] ?? '') !== ''): ?>
-  <style><?= $view['themeCssVars'] ?></style>
-  <?php endif; ?>
+  <?= $view['themeStyleTag'] ?>
 </head>
 <body>
   <div class="wrap">
@@ -39,11 +37,7 @@ $view = $pageRender['buildViewData'](
         <?= $view['menuHtml'] ?>
       </nav>
     </section>
-    <?php if ($view['showBackLink']): ?>
-      <div class="topbar">
-        <a class="back" href="/">← Voltar para o início</a>
-      </div>
-    <?php endif; ?>
+    <?= $view['backLinkHtml'] ?>
 
     <div class="<?= $view['pageLayoutClass'] ?>">
       <article class="card">
